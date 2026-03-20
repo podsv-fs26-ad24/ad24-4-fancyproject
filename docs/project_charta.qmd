@@ -36,7 +36,7 @@ PERSONA 1
 Name: Lukas (Citizen Scientist)
 Age: 29
 
-![ ](pics/lukas.jpeg){ width=70% }
+![ ](pics/lukas.jpeg){ width=200px }
 
 Background & Behavior
 Software developer with a strong interest in astronomy.
@@ -69,7 +69,7 @@ PERSONA 2
 Name:Dr. Aris (Expedition Planner)
 Age: 45
 
-![ ](pics/aris.jpeg){ width=70% }
+![ ](pics/aris.jpeg){ width=200px }
 
 Background & Behavior
 Field geologist planning high-cost meteorite expeditions.
@@ -126,11 +126,6 @@ Product form:
 The chosen format is a data story presented as a web-based application using Quarto. This format allows a guided narrative, where users are introduced step by step to the most important aspects of the dataset. At the same time, it allows light exploration, combining storytelling with elements of an exploratory tool. It follows a narrative: from the "Illusion" (NASA's raw map) to the "Reality" (Adjusted for human and geographic bias).
 
 Visual encodings:
-<!-- The visualization includes multiple complementary chart types:
-- A world map displaying meteorite landings based on latitude and longitude to reveal spatial patterns.
-- A histogram showing the distribution of meteorite mass to identify typical ranges and outliers.
-- A bar chart comparing the frequency of different meteorite classes (recclass).
-- A line chart illustrating how meteorite discoveries change over time. -->
 
 - Bivariate Choropleth Map: To show the intersection of population density and discovery frequency.
 - Correlation Plots: GDP vs. Number of recorded finds to check for "Wealth Bias."
@@ -140,12 +135,6 @@ Visual encodings:
 These visual encodings are chosen to represent key analytical dimensions such as distribution, comparison, location, and temporal trends.
 
 Interactivity:
-<!-- The visualizations include light interactivity to support user exploration without increasing complexity. This includes:
-- Tooltips to display additional information when hovering over data points
-- Zooming and panning functionality for the map
-- Optional highlighting or filtering (e.g. by meteorite class or time range, if feasible) -->
-
-<!-- This level of interactivity allows users to engage with the data while keeping the system simple and robust. -->
 
 Layer Toggles: Switch between "Raw Finds" and "Discovery Probability."
 
