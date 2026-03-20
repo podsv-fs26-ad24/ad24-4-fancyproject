@@ -49,29 +49,24 @@ Divide the project into individual phases, describe them briefly and draw up a p
 %%| label: fig-project-plan
 %%| fig-cap: Preliminary project plan in the form of a Gantt chart.
 gantt
-    title Project Plan
+    title Project Plan: Meteorite Treasure Map
     dateFormat YYYY-MM-DD
-    tickInterval 5day
-    section Project Understanding
-        Initiation workshop and context analysis     :a1, 2024-07-01, 1d
-        Stakeholder and user analysis     :a3, 2024-07-02, 5d
-        Situation assessment    :a4, 2024-07-06, 1d
-        Project objectives and visualization concept    :a5, 2024-07-07, 1d
-        Sign project charta: milestone, m1, 2024-07-08, 1d
     
-    section Data Acquisition and Exploration
-        Acquire data :a6, 2024-07-08, 3d
-        Exploratory data analysis   :a7, 2024-07-09, 2d
-        Discuss data report: milestone, m2, 2024-07-11, 1d
-        
-    section Visual Encoding and Design
-        Overview charts   :a8, 2024-07-11, 3d
-        Maps :a9, 2024-07-11, 5d
-        Implement Dashboard prototype :a10, 2024-07-16, 5d
-        Complete visualization report :a10, 2024-07-21, 1d
-    section Evaluation
-        Prepare presentation :a10, 2024-07-22, 2d
-        Project presentation : milestone, m2, 2024-07-24, 4m
+    section Foundation
+        Project setup & Charta       :a1, 2026-03-18, 2d
+        Data Acquisition (NASA/WB)   :a2, 2026-03-20, 3d
+
+    section Data Correlation
+        Socio-Economic Mapping       :a3, 2026-03-23, 5d
+        Environmental Layer Join     :a4, 2026-03-28, 5d
+
+    section Visualization
+        Bivariate Map Development    :a5, 2026-04-05, 7d
+        Storytelling & Scrollytelling:a6, 2026-04-12, 7d
+
+    section Finalization
+        Documentation & Refinement   :a7, 2026-05-01, 7d
+        Presentation Preparation     :a8, 2026-05-15, 5d
 ```
 
 See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
