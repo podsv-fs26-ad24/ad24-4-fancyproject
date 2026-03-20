@@ -45,7 +45,7 @@ Justify the concept by mapping it explicitly to the project objectives and the u
 ## Project Plan
 Divide the project into individual phases, describe them briefly and draw up a preliminary timetable, e.g. as a Gantt chart:
 
-```{mermaid}
+<!-- ```{mermaid}
 %%| label: fig-project-plan
 %%| fig-cap: Preliminary project plan in the form of a Gantt chart.
 gantt
@@ -69,7 +69,7 @@ gantt
         Presentation Preparation     :a8, 2026-05-15, 5d
 ```
 
-See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
+See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/) -->
 
 ## Roles and Contact Details
 List the people involved in the development work here with their role titles, tasks and contact details.
