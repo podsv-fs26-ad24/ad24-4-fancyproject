@@ -200,7 +200,7 @@ See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html).
 
 ## Roles and Contact Details
 List the people involved in the development work here with their role titles, tasks and contact details.
-Team Members:
+Team Members
 
 - Baskaran Amutha (baskaamu): Technical Setup and Data Integration
 - Eros Palumbo (palero01): Project Lead and Concept & Socio-Economic Analysis.
