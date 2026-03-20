@@ -176,31 +176,31 @@ The visualization concept directly supports the project objectives by enabling u
 ## Project Plan
 Divide the project into individual phases, describe them briefly and draw up a preliminary timetable, e.g. as a Gantt chart:
 
-<!-- ```{mermaid}
+```{mermaid}
 %%| label: fig-project-plan
 %%| fig-cap: Preliminary project plan in the form of a Gantt chart.
 gantt
-    title Project Plan: Meteorite Treasure Map
+    title Project Plan
     dateFormat YYYY-MM-DD
     
-    section Foundation
-        Project setup & Charta       :a1, 2026-03-18, 2d
-        Data Acquisition (NASA/WB)   :a2, 2026-03-20, 3d
+    section Project Understanding
+        Project setup            :a1, 2026-03-18, 2d
+        Project charta           :a2, 2026-03-19, 1d
 
-    section Data Correlation
-        Socio-Economic Mapping       :a3, 2026-03-23, 5d
-        Environmental Layer Join     :a4, 2026-03-28, 5d
+    section Data Exploration
+        Data cleaning            :a3, 2026-03-21, 5d
+        Data analysis            :a4, 2026-03-26, 5d
 
     section Visualization
-        Bivariate Map Development    :a5, 2026-04-05, 7d
-        Storytelling & Scrollytelling:a6, 2026-04-12, 7d
+        Create visualizations    :a5, 2026-04-01, 10d
+        Build data story         :a6, 2026-04-11, 7d
 
     section Finalization
-        Documentation & Refinement   :a7, 2026-05-01, 7d
-        Presentation Preparation     :a8, 2026-05-15, 5d
+        Documentation            :a7, 2026-05-01, 7d
+        Presentation prep        :a8, 2026-05-20, 5d
 ```
 
-See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/) -->
+See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
 
 ## Roles and Contact Details
 List the people involved in the development work here with their role titles, tasks and contact details.
