@@ -1,45 +1,172 @@
 # Project Charta
 ## Context and Scope
-Describe the context (domain/business area) and topic of the visualization project. Which topical aspects should be addressed? Which question(s) should the data visualization project answer? What are the expected benefits of the project? Where should the visualization product be published (e.g. website, app, intranet)?
+
+This project focuses on the socio-economic and geographic analysis of meteorite discoveries worldwide. While NASA records where meteorites were found, the data is heavily biased by human presence and environmental conditions.
+The "Meteorite Treasure Map" aims to explain the "Discovery Gap": Why do we find thousands of meteorites in the Sahara or Antarctica, but almost none in the Black Forest? By correlating NASA landing data with population density, GDP, and land cover, we visualize the Discovery Probability. The goal is to shift the perspective from where meteorites landed to why we found them there, ultimately creating an "Opportunity Map" for future discoveries.
 
 ## Project Objectives and Success Criteria
-Describe the objectives **from the client/stakeholder perspective**. For example: "Enable users to understand the distribution of sales across different regions". Try to be as specific as possible, but restrict to the concrete needs formulated by the client/stakeholders. For example: if a dashboard is needed explicitly, then state it here, otherwise leave the form of the visualization product open.
+Objective:
+Enable users to understand that meteorite distribution maps are often maps of human activity and geography. The project identifies "Discovery Gaps" by overlaying NASA data with socio-economic and environmental layers.
 
-Formulate success criteria (from the client/stakeholder perspective): qualitative objectives and, wherever possible, corresponding quantitative metrics with target values to be achieved within the project. These objectives should directly address the pains and gains identified in the user analysis.
+Success Criteria:
+- Users can identify the correlation between population density and discovery rates.
+- Users can distinguish between "High-Potential" (arid, flat) and "Low-Visibility" (forest, urban) zones.
+- The visualization successfully highlights regions where meteorites are likely hidden but unrecorded
 
-It is also helpful to specify what is explicitly excluded from the project objectives (out of scope).
+Quantitative criteria:
+- At least 4 clear visualizations covering location, mass, class, and time.
+- Data includes more than 100 observations and at least 6 features.
+
+Out of Scope:
+- No real-time data updates.
+- No advanced predictive modeling or machine learning.
 
 ## Stakeholder Analysis
-List the people involved in and affected by the project. Describe their goals and relationships with each other. Visualisation in the form of a stakeholder map can provide a quick overview.
+Stakeholders include:
+
+- Project team members: responsible for data analysis and visualization.
+- Lecturers: evaluate the project and provide feedback.
+- Students and general public: end users of the visualization.
+
+The project team develops the product, lecturers assess its quality, and users benefit from understanding the data.
 
 ## User Analysis
-Analyse the target audience of the visualization product and create at least 2 personas with **relevant attributes** such as domain expertise, data literacy, technical environment (devices, screen sizes), frequency of use etc. Amend each persona with the dimensions of the customer profile side in the Value Proposition Canvas @Osterwalder2014:
 
-* **User tasks** (jobs): What tasks are users trying to accomplish? Consider functional jobs (e.g. analysing data, making decisions), social jobs (e.g. reporting to stakeholders, collaborating with colleagues) and emotional jobs (e.g. feeling confident in their decisions).
-* **Pains**: What obstacles, risks or undesired outcomes do users currently face? What makes their current approach frustrating or inefficient?
-* **Gains**: What outcomes and benefits do users expect or desire? What would exceed their expectations?
+PERSONA 1
+Name: Lukas (Citizen Scientist)
+Age: 29
+
+Background & Behavior
+Software developer with a strong interest in astronomy.
+Lives in a forested region in Southern Germany with low meteorite recovery rates.
+Approaches problems through data analysis and pattern recognition.
+
+Goals
+
+- Validate detection bias caused by vegetation and soil coverage
+- Demonstrate that absence of finds does not imply absence of meteorites
+- Understand and communicate population-driven data bias
+
+Pain Points
+
+- Binary map logic (find vs. no find) lacks probabilistic context
+- No information about discovery context (accidental vs. systematic findings)
+- Misleading spatial patterns due to uneven human activity
+
+Key Features
+
+- Detection Probability Map
+- Visualizes likelihood of meteorite discovery based on surface conditions
+- Population Bias Adjustment
+- Normalizes find density relative to human presence
+
+Local Impact Estimator
+- Estimates expected meteorite falls vs. actual detection probability
+
+PERSONA 2
+Name:Dr. Aris (Expedition Planner)
+Age: 45
+
+Background & Behavior
+Field geologist planning high-cost meteorite expeditions.
+Decision-making is driven by risk reduction and expected return.
+
+Goals
+- Maximize return on field investigation
+- Identify under-explored but high-potential regions
+- Optimize timing and logistics based on environmental conditions
+
+Pain Points
+
+- Fragmented data across multiple platforms
+- High financial risk due to poor site selection
+- No integrated way to evaluate terrain suitability and search history
+
+Key Features
+
+- Opportunity Map (Bivariate Analysis)
+- Combines low population density with high aridity
+
+Geological Stability Filter
+- Highlights surfaces with long-term preservation potential
+
+Accessibility Index
+- Estimates logistical effort based on distance to infrastructure
+
+![ ](pics/lukas.jpeg){ width=70% }
+![ ](pics/aris.jpeg){ width=70% }
 
 
 ## Situation Assessment
-Describe the available resources (data, personnel, material, software/tools, infrastructure, etc.) and time as well as restrictions and constraints. Possible risks that may arise during the project are also identified.
+Resources:
+- Dataset containing meteorite landings with attributes such as mass, location, class, and year.
+- Scientific Data: NASA Meteorite Landings.
+- Socio-Economic Data: World Bank (GDP per capita, Population Density).
+- Environmental Data: MODIS Land Cover and Aridity Index (to calculate visibility and preservation).
+- Team members with basic Python and data visualization knowledge.
+- Tools: Python, Quarto, GitHub.
 
+Constraints:
+- Limited time until project deadlines.
+- Requirement for reproducibility.
+
+Risks:
+- Data quality issues (missing values, inconsistencies)
+- GDP/Population data might be at a country level while meteorites are point-based (requires spatial joining).
+- Technical challenges in visualization or deployment
 
 ## Visualization Concept
-Translate the project objectives into a concrete visualization concept. This corresponds to the value map side of the Value Proposition Canvas [@Osterwalder2014] – describe how the proposed visualization product addresses the users' tasks, relieves their pains and creates gains. Address the following aspects:
+The visualization product is designed to translate the project objectives into an intuitive and accessible representation of meteorite data. It enables users to explore patterns in meteorite distribution, mass, and classification in a structured and visually clear way, addressing their need for simple and understandable insights.
 
-* **Product form**: Composition of the visualization product – dashboard, data story, infographic, exploratory tool, etc.
-* **Visual encodings**: Types of charts and visualizations to be used – e.g. bar chart, line chart, scatter plot, map, etc.
-* **Interactivity**: Static vs. dynamic/interactive elements – filtering, drill-down, tooltips, linked views, etc.
-* **Narrative and annotation**: Text elements, storytelling structure, annotations and contextual information.
-* **Target medium and integration**: Embedding in the target environment – e.g. website, intranet, app, print, etc.
+Product form:
+The chosen format is a data story presented as a web-based application using Quarto. This format allows a guided narrative, where users are introduced step by step to the most important aspects of the dataset. At the same time, it allows light exploration, combining storytelling with elements of an exploratory tool. It follows a narrative: from the "Illusion" (NASA's raw map) to the "Reality" (Adjusted for human and geographic bias).
 
-For each design decision, articulate the intended value along three dimensions:
+Visual encodings:
+<!-- The visualization includes multiple complementary chart types:
+- A world map displaying meteorite landings based on latitude and longitude to reveal spatial patterns.
+- A histogram showing the distribution of meteorite mass to identify typical ranges and outliers.
+- A bar chart comparing the frequency of different meteorite classes (recclass).
+- A line chart illustrating how meteorite discoveries change over time. -->
 
-* **Cognitive and analytical value**: How does the design amplify the user's ability to detect patterns, identify outliers, understand distributions or discover relationships [@card1999; @vanwijk2005]?
-* **Communicative value**: How does the design support the communication of information to the target audience profile(s)? 
-* **Experiential and aesthetic value**: How do the visual and interactive qualities of the design foster engagement, trust and willingness to adopt the product in practice?
+- Bivariate Choropleth Map: To show the intersection of population density and discovery frequency.
+- Correlation Plots: GDP vs. Number of recorded finds to check for "Wealth Bias."
+- Heatmap of the "Discovery Gap": Highlighting arid, uninhabited areas with high preservation potential.
+- Scatterplot: Mass vs. Discovery Year, filtered by Land Cover type.
 
-Justify the concept by mapping it explicitly to the project objectives and the user needs identified in the user analysis.
+These visual encodings are chosen to represent key analytical dimensions such as distribution, comparison, location, and temporal trends.
+
+Interactivity:
+<!-- The visualizations include light interactivity to support user exploration without increasing complexity. This includes:
+- Tooltips to display additional information when hovering over data points
+- Zooming and panning functionality for the map
+- Optional highlighting or filtering (e.g. by meteorite class or time range, if feasible) -->
+
+<!-- This level of interactivity allows users to engage with the data while keeping the system simple and robust. -->
+
+Layer Toggles: Switch between "Raw Finds" and "Discovery Probability."
+
+Region Inspector: Click a region to see its "Discovery Efficiency Score" (based on Aridity and Population).
+
+Narrative and annotation:
+The visualization follows a clear storytelling structure: introduction, exploration of key variables, and summary of findings. Each visualization is accompanied by short explanatory text and annotations to guide the user and highlight key insights. This reduces cognitive load and helps users interpret the data correctly.
+
+Target medium and integration:
+The visualization product will be published as a web-based application using GitHub Pages. This ensures easy accessibility across devices such as laptops and tablets without requiring additional software installation.
+
+Value of the design:
+
+Cognitive and analytical value:
+The selected visual encodings enhance pattern recognition and analytical understanding. The map supports spatial reasoning, the histogram reveals distributions and outliers, the bar chart enables comparison, and the line chart highlights trends over time. Interactivity further supports exploration and deeper insight.
+
+Communicative value:
+The use of simple, well-known chart types combined with a structured narrative ensures that the information is communicated clearly to a broad audience. Annotations and explanations help users with limited data literacy understand the key insights.
+
+Experiential and aesthetic value:
+A clean and minimal visual design combined with light interactivity creates an engaging user experience. The ability to explore the data (e.g. through tooltips or zooming) increases user involvement and trust in the visualization, while maintaining clarity and usability.
+
+Justification:
+The visualization concept directly supports the project objectives by enabling users to understand meteorite patterns in an intuitive and structured way. It addresses user needs by simplifying complex data, reducing cognitive effort, and providing both guided storytelling and limited interactive exploration.
+
 
 
 ## Project Plan
@@ -73,3 +200,8 @@ See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html).
 
 ## Roles and Contact Details
 List the people involved in the development work here with their role titles, tasks and contact details.
+Team Members:
+
+- Baskaran Amutha (baskaamu): Technical Setup and Data Integration
+- Eros Palumbo (palero01): Project Lead and Concept & Socio-Economic Analysis.
+- Nicolas Schwaiger (schwani8): Design, Visualization & Layout Support.
