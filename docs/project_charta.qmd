@@ -36,7 +36,7 @@ PERSONA 1
 Name: Lukas (Citizen Scientist)
 Age: 29
 
-![ ](pics/lukas.jpeg){ width=90% }
+![ ](pics/lukas.jpeg){ width=100% }
 
 Background & Behavior
 Software developer with a strong interest in astronomy.
