@@ -1,8 +1,8 @@
 # Project Charta
 ## Context and Scope
 
-This project focuses on the socio-economic and geographic analysis of meteorite discoveries worldwide. While NASA records where meteorites were found, the data is heavily biased by human presence and environmental conditions.
-The "Meteorite Treasure Map" aims to explain the "Discovery Gap": Why do we find thousands of meteorites in the Sahara or Antarctica, but almost none in the Black Forest? By correlating NASA landing data with population density, GDP, and land cover, we visualize the Discovery Probability. The goal is to shift the perspective from where meteorites landed to why we found them there, ultimately creating an "Opportunity Map" for future discoveries.
+This project focuses on the socio-economic and geographic analysis of meteorite discoveries worldwide. Current maps (like the NASA dataset) show a heavy "Discovery Bias": meteorites seem to land only where people live or where the ground is dry.
+The "Meteorite Treasure Map" aims to deconstruct this bias. By correlating NASA landing data with population density (Human Presence), Aridity (Preservation), and Land Cover (Visibility), we visualize the "Discovery Probability." The goal is to shift from a map of findings to a map of potential, creating an "Opportunity Map" for future scientific expeditions.
 
 ## Project Objectives and Success Criteria
 Objective:
