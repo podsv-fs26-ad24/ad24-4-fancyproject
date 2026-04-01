@@ -1,8 +1,9 @@
 # Project Charta
 ## Context and Scope
 
-This project focuses on the socio-economic and geographic analysis of meteorite discoveries worldwide. Current maps (like the NASA dataset) show a heavy "Discovery Bias": meteorites seem to land only where people live or where the ground is dry.
-The "Meteorite Treasure Map" aims to deconstruct this bias. By correlating NASA landing data with population density (Human Presence), Aridity (Preservation), and Land Cover (Visibility), we visualize the "Discovery Probability." The goal is to shift from a map of findings to a map of potential, creating an "Opportunity Map" for future scientific expeditions.
+This project focuses on the socio-economic, geographic, and economic analysis of meteorite discoveries worldwide. While NASA records where meteorites were found, the data is heavily biased by human presence and environmental conditions.
+
+The "Meteorite Treasure Map" aims to deconstruct this "Discovery Gap" by correlating NASA data with population density (Human Presence), Aridity (Preservation), and Land Cover (Visibility). Additionally, it integrates a market-value estimation engine based on meteorite classification and mass. The goal is to shift from a map of findings to an interactive "Opportunity & Value Map" that protects collectors from fraud and helps explorers find high-potential, unrecorded search zones.
 
 ## Project Objectives and Success Criteria
 Objective:
@@ -10,92 +11,68 @@ Enable users to understand that meteorite distribution maps are often maps of hu
 
 Success Criteria:
 - Users can identify the correlation between population density and discovery rates.
-- Users can distinguish between "High-Potential" (arid, flat) and "Low-Visibility" (forest, urban) zones.
-- The visualization successfully highlights regions where meteorites are likely hidden but unrecorded
+- Users can calculate an Estimated Market Value (EMV) for specific meteorite classes.
+- The visualization successfully highlights "High-Potential" zones where meteorites are likely hidden but unrecorded.
 
 Quantitative criteria:
-- At least 4 clear visualizations covering location, mass, class, and time.
-- Data includes more than 100 observations and at least 6 features.
+- At least 5 interactive visualizations (Bivariate Map, Price-Scatterplot, etc.).
+- Integration of 4 distinct data pillars (NASA, World Bank, Aridity Index, Market Price Matrix).
+- Data includes more than 30,000 observations.
 
 Out of Scope:
-- No real-time data updates.
-- No advanced predictive modeling or machine learning.
+- No real-time tracking of new meteor showers.
+- No advanced machine learning (rule-based statistical scoring only).
 
 ## Stakeholder Analysis
 Stakeholders include:
 
-- Project team members: responsible for data analysis and visualization.
-- Lecturers: evaluate the project and provide feedback.
-- Students and general public: end users of the visualization.
+- Project Team: Responsible for data synthesis and dashboard architecture.
+- Lecturers: Evaluating the analytical depth and handling of data bias.
+- Meteorite Collectors & Investors: Requiring independent price benchmarks to avoid scams.
+- Expedition Planners: Seeking high-probability, under-searched areas for field research.
 
 The project team develops the product, lecturers assess its quality, and users benefit from understanding the data.
 
 ## User Analysis
 
 PERSONA 1
-Name: Lukas (Citizen Scientist)
+Name: Lukas (The Amateur Investor)
 Age: 29
 
 ![ ](pics/lukas.jpeg){ width=70% }
 
 Background & Behavior
-Software developer with a strong interest in astronomy.
-Lives in a forested region in Southern Germany with low meteorite recovery rates.
-Approaches problems through data analysis and pattern recognition.
+- Interested in alternative assets; frequently browses online auctions for space memorabilia.
 
 Goals
-
-- Validate detection bias caused by vegetation and soil coverage
-- Demonstrate that absence of finds does not imply absence of meteorites
-- Understand and communicate population-driven data bias
+- Wants to verify if a meteorite price on eBay is fair and understand the rarity of certain classes (e.g., Pallasites).
 
 Pain Points
-
-- Binary map logic (find vs. no find) lacks probabilistic context
-- No information about discovery context (accidental vs. systematic findings)
-- Misleading spatial patterns due to uneven human activity
+- Lack of market transparency; fear of overpaying for "scam" listings or fake stones.
 
 Key Features
-
-- Detection Probability Map
-- Visualizes likelihood of meteorite discovery based on surface conditions
-- Population Bias Adjustment
-- Normalizes find density relative to human presence
+- An interactive tool that estimates price based on mass, recclass, and fall/found status
 
 Local Impact Estimator
 - Estimates expected meteorite falls vs. actual detection probability
 
 PERSONA 2
-Name:Dr. Aris (Expedition Planner)
-Age: 45
+Name: Sarah (The Field Hunter)
+Age: 35
 
-![ ](pics/aris.jpeg){ width=200px }
+![ ](pics/sarah.png){ width=200px }
 
 Background & Behavior
-Field geologist planning high-cost meteorite expeditions.
-Decision-making is driven by risk reduction and expected return.
+- Professional geologist and adventurer; plans high-risk search expeditions.
 
 Goals
-- Maximize return on field investigation
-- Identify under-explored but high-potential regions
-- Optimize timing and logistics based on environmental conditions
+- Identify "undiscovered" treasure zones where preservation potential is high but human search history is low.
 
 Pain Points
-
-- Fragmented data across multiple platforms
-- High financial risk due to poor site selection
-- No integrated way to evaluate terrain suitability and search history
+- NASA data only shows what was found, not what is still there; high financial risk of site selection.
 
 Key Features
-
-- Opportunity Map (Bivariate Analysis)
-- Combines low population density with high aridity
-
-Geological Stability Filter
-- Highlights surfaces with long-term preservation potential
-
-Accessibility Index
-- Estimates logistical effort based on distance to infrastructure
+- A bivariate map highlighting uninhabited, arid zones with high visual discovery probability.
 
 
 
@@ -115,9 +92,8 @@ Constraints:
 - Requirement for reproducibility.
 
 Risks:
-- Data quality issues (missing values, inconsistencies)
-- GDP/Population data might be at a country level while meteorites are point-based (requires spatial joining).
-- Technical challenges in visualization or deployment
+- Spatial Joining: Technical challenge of merging point-data (NASA) with raster-data (Climate/Population).
+- Price Volatility: Market prices fluctuate; mitigated by using 5-year average benchmarks.
 
 ## Visualization Concept
 The visualization product is designed to translate the project objectives into an intuitive and accessible representation of meteorite data. It enables users to explore patterns in meteorite distribution, mass, and classification in a structured and visually clear way, addressing their need for simple and understandable insights.
@@ -125,20 +101,22 @@ The visualization product is designed to translate the project objectives into a
 Product form:
 The chosen format is a data story presented as a web-based application using Quarto. This format allows a guided narrative, where users are introduced step by step to the most important aspects of the dataset. At the same time, it allows light exploration, combining storytelling with elements of an exploratory tool. It follows a narrative: from the "Illusion" (NASA's raw map) to the "Reality" (Adjusted for human and geographic bias).
 
+Narrative Structure: The story follows a path from The Illusion (NASA's raw map) to The Explanation (Overlaying human/environmental filters) to The Revelation (The Opportunity Map and the financial worth of undiscovered falls).
+
 Visual encodings:
 
-- Bivariate Choropleth Map: To show the intersection of population density and discovery frequency.
-- Correlation Plots: GDP vs. Number of recorded finds to check for "Wealth Bias."
+- Bivariate Choropleth Map: Intersection of Population Density vs. Discovery Frequency.
+- Valuation Scatterplot: Correlation of Meteorite Class vs. Market Value.
+- The "Fair Value" Tooltip: Interactive pop-up for each NASA point, displaying an estimated price based on mass and rarity.
 - Heatmap of the "Discovery Gap": Highlighting arid, uninhabited areas with high preservation potential.
-- Scatterplot: Mass vs. Discovery Year, filtered by Land Cover type.
 
 These visual encodings are chosen to represent key analytical dimensions such as distribution, comparison, location, and temporal trends.
 
 Interactivity:
 
-Layer Toggles: Switch between "Raw Finds" and "Discovery Probability."
-
-Region Inspector: Click a region to see its "Discovery Efficiency Score" (based on Aridity and Population).
+- Layer Toggles: Switch between "Raw Finds" and "Discovery Probability."
+- Region Inspector: Click a region to see its "Discovery Efficiency Score" (based on Aridity and Population).
+- Valuation Input: Users can input custom mass/class to test "What-if" scenarios for potential finds
 
 Narrative and annotation:
 The visualization follows a clear storytelling structure: introduction, exploration of key variables, and summary of findings. Each visualization is accompanied by short explanatory text and annotations to guide the user and highlight key insights. This reduces cognitive load and helps users interpret the data correctly.
@@ -172,21 +150,20 @@ gantt
     title Project Plan
     dateFormat YYYY-MM-DD
     
-    section Project Understanding
-        Project setup            :a1, 2026-03-18, 2d
-        Project charta           :a2, 2026-03-19, 1d
+    section Project Foundation
+        Project setup & Charta      :a1, 2026-03-18, 2d
+        Data Sourcing (NASA/WB)      :a2, 2026-03-20, 3d
 
-    section Data Exploration
-        Data cleaning            :a3, 2026-03-21, 5d
-        Data analysis            :a4, 2026-03-26, 5d
+    section Data Enrichment
+        Price Index Research         :a3, 2026-03-23, 4d
+        Spatial Join (Climate/Pop)   :a4, 2026-03-27, 5d
 
     section Visualization
-        Create visualizations    :a5, 2026-04-01, 10d
-        Build data story         :a6, 2026-04-11, 7d
+        Bivariate Map Development    :a5, 2026-04-05, 10d
+        Valuation UI & Storytelling  :a6, 2026-04-15, 7d
 
     section Finalization
-        Documentation            :a7, 2026-05-01, 7d
-        Presentation prep        :a8, 2026-05-20, 5d
+        Documentation & Refinement   :a7, 2026-05-01, 10d
 ```
 
 See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
