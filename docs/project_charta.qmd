@@ -60,7 +60,7 @@ PERSONA 2
 Name: Sarah (The Field Hunter)
 Age: 35
 
-![ ](pics/sarah.png){ width=200px }
+![ ](pics/sarah.png){ width=70% }
 
 Background & Behavior
 - Professional geologist and adventurer; plans high-risk search expeditions.
