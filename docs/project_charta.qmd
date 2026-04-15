@@ -145,30 +145,64 @@ Divide the project into individual phases, describe them briefly and draw up a p
 
 ```{mermaid}
 %%| label: fig-project-plan
-%%| fig-cap: Preliminary project plan in the form of a Gantt chart.
+%%| fig-cap: Planned vs Actual project plan in the form of a Gantt chart.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "taskBkgColor": "#E0E0E0",
+    "taskBorderColor": "#9E9E9E",
+    "taskTextDarkColor": "#000000",
+    "doneTaskBkgColor": "#8A2BE2",
+    "doneTaskBorderColor": "#4B0082",
+    "activeTaskBkgColor": "#9370DB",
+    "activeTaskBorderColor": "#4B0082",
+    "activeTaskTextDarkColor": "#FFFFFF",
+    "doneTaskTextDarkColor": "#FFFFFF"
+  }
+}}%%
 gantt
-    title Project Plan
+    title Project Plan (Planned vs. Actual)
     dateFormat YYYY-MM-DD
     
     section Project Foundation
-        Project setup & Charta      :a1, 2026-03-18, 2d
-        Data Sourcing (NASA/WorldBank)      :a2, 2026-03-18, 2d
-        Coaching Session & Meeting Notes + Concept Dev.   :a3, 2026-03-25, 3d
-        Organization & Version Control :a3, 2026-03-28, 2d
+    Project setup & Charta (Plan)                 :plan_a1, 2026-03-18, 2d
+    Project setup & Charta (Actual)               :done, act_a1, 2026-03-18, 2d
+    
+    Data Sourcing (Plan)                          :plan_a2, 2026-03-18, 2d
+    Data Sourcing (Actual)                        :done, act_a2, 2026-03-19, 3d
+    
+    Coaching & Concept Dev. (Plan)                :plan_a3, 2026-03-25, 3d
+    Coaching & Concept Dev. (Actual)              :done, act_a3, 2026-03-25, 2d
+    
+    Organization & Version Control (Plan)         :plan_a4, 2026-03-28, 2d
+    Organization & Version Control (Actual)       :done, act_a4, 2026-03-28, 2d
 
     section Data Enrichment
-        Price Index Research         :a3, 2026-04-14, 2d
-        Environmental Data aquisition (Aridity, Land Cover) :a4, 2026-04-16, 1d
-        Spatial Join (Climate/Pop)   :a4, 2026-04-16, 5d
+    Price Index Research (Plan)                   :plan_a5, 2026-04-14, 2d
+    Price Index Research (Actual)                 :active, act_a5, 2026-04-14, 3d
+    
+    Environmental Data acquisition (Plan)         :plan_a6, 2026-04-16, 1d
+    Environmental Data acquisition (Actual)       :active, act_a6, 2026-04-16, 1d
+    
+    Spatial Join (Climate/Pop) (Plan)             :plan_a7, 2026-04-16, 5d
+    Spatial Join (Climate/Pop) (Actual)           :active, act_a7, 2026-04-16, 5d
 
     section Visualization
-        Bivariate Map Development    :a5, 2026-04-18, 10d
-        Valuation UI & Storytelling  :a6, 2026-04-18, 7d
+    Bivariate Map Development (Plan)              :plan_a8, 2026-04-18, 10d
+    Bivariate Map Development (Actual)            :active, act_a8, 2026-04-18, 10d
+    
+    Valuation UI & Storytelling (Plan)            :plan_a9, 2026-04-18, 7d
+    Valuation UI & Storytelling (Actual)          :active, act_a9, 2026-04-18, 7d
 
     section Finalization
-        Documentation & Refinement   :a7, 2026-04-29, 10d
-        Storytelling improvements   :a7, 2026-05-02, 5d
-        Final Review & Submission    :a8, 2026-05-25, 2d
+    Documentation & Refinement (Plan)             :plan_a10, 2026-04-29, 10d
+    Documentation & Refinement (Actual)           :active, act_a10, 2026-04-29, 10d
+    
+    Storytelling improvements (Plan)              :plan_a11, 2026-05-02, 5d
+    Storytelling improvements (Actual)            :active, act_a11, 2026-05-02, 5d
+    
+    Final Review & Submission (Plan)              :plan_a12, 2026-05-25, 2d
+    Final Review & Submission (Actual)            :active, act_a12, 2026-05-25, 2d
 ```
 
 See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
