@@ -152,18 +152,23 @@ gantt
     
     section Project Foundation
         Project setup & Charta      :a1, 2026-03-18, 2d
-        Data Sourcing (NASA/WB)      :a2, 2026-03-20, 3d
+        Data Sourcing (NASA/WorldBank)      :a2, 2026-03-18, 2d
+        Coaching Session & Meeting Notes + Concept Dev.   :a3, 2026-03-25, 3d
+        Organization & Version Control :a3, 2026-03-28, 2d
 
     section Data Enrichment
-        Price Index Research         :a3, 2026-03-23, 4d
-        Spatial Join (Climate/Pop)   :a4, 2026-03-27, 5d
+        Price Index Research         :a3, 2026-04-14, 2d
+        Environmental Data aquisition (Aridity, Land Cover) :a4, 2026-04-16, 1d
+        Spatial Join (Climate/Pop)   :a4, 2026-04-16, 5d
 
     section Visualization
-        Bivariate Map Development    :a5, 2026-04-05, 10d
-        Valuation UI & Storytelling  :a6, 2026-04-15, 7d
+        Bivariate Map Development    :a5, 2026-04-18, 10d
+        Valuation UI & Storytelling  :a6, 2026-04-18, 7d
 
     section Finalization
-        Documentation & Refinement   :a7, 2026-05-01, 10d
+        Documentation & Refinement   :a7, 2026-04-29, 10d
+        Storytelling improvements   :a7, 2026-05-02, 5d
+        Final Review & Submission    :a8, 2026-05-25, 2d
 ```
 
 See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
