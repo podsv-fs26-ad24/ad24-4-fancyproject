@@ -200,6 +200,9 @@ gantt
     
     Storytelling improvements (Plan)              :plan_a11, 2026-05-02, 5d
     Storytelling improvements (Actual)            :active, act_a11, 2026-05-02, 5d
+
+    Buffer for unforseen issues (Plan)              :plan_a11, 2026-05-10, 7d
+    Buffer for unforseen issues (Actual)            :active, act_a11, 2026-05-10, 7d
     
     Final Review & Submission (Plan)              :plan_a12, 2026-05-25, 2d
     Final Review & Submission (Actual)            :active, act_a12, 2026-05-25, 2d
