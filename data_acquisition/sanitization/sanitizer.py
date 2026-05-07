@@ -4,7 +4,7 @@ import os
 
 # Define file paths
 INPUT_FILE = os.path.join(os.path.dirname(__file__), '..', 'Meteorite_Landings_NASA.csv')
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), '..', 'Meteorite_Landings_NASA_sanitized.csv')
+OUTPUT_FILE = os.path.join(os.path.dirname(__file__), '../..', 'data_sanitized/Meteorite_Landings_NASA_sanitized.csv')
 
 # Characters that are not allowed in the recclass column
 INVALID_RECCLASS_CHARS = re.compile(r'[/?()\~]')

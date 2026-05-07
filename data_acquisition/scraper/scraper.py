@@ -30,7 +30,7 @@ async def run():
                 print(f" [!] Skip Page {i}: {e}")
                 continue
 
-        with open("unique_urls3.txt", "w") as f:
+        with open("scraper_unique_urls.txt", "w") as f:
             for url in sorted(list(unique_urls)):
                 f.write(url + "\n")
 
