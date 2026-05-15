@@ -205,7 +205,7 @@ Source `*.qmd` and configuration files are in the `docs` folder. The Quarto proj
 
 With embedded python code chunks that perform computations, you need to make sure that the python environment is activated when rendering. This can be done by prefixing the render command with `uv run`, e.g.:
 ```bash
-uv run quarto render
+uv run quarto render docs
 ```
 
 ### Working on the Documentation

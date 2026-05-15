@@ -7,25 +7,39 @@ language:
   section-title-appendices: "Appendix"
 
 website:
-  title: "Sample Project"
+  title: "Meteorites, Aridity & Wealth"
+  description: "Global meteorite landings, aridity, population density and wealth — an interactive data visualization product."
   search: true
+  page-navigation: true
   sidebar:
     style: "floating"
     search: true
+    collapse-level: 1
     contents:
       - index.qmd
       - project_charta.qmd
       - data_report.qmd
       - viz_design_report.qmd
-      - evaluation.qmd
-      - meeting_notes.qmd
+      - interactive_map.qmd
+      - deployment.qmd
 
 format:
   html:
-    theme: cosmo
+    theme:
+      - litera
+      - theme.scss
     css: styles.css
     toc: true
-      
+    toc-location: right
+    toc-depth: 3
+    page-layout: full
+    grid:
+      sidebar-width: 215px
+      body-width: 1180px
+      margin-width: 170px
+      gutter-width: 1.3rem
+    fig-responsive: true
+    smooth-scroll: true
 
 number-sections: true
 
