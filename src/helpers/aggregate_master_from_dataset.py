@@ -22,7 +22,7 @@ compute a *country-level* aridity average by:
 
 Output
 ------
-  data_sanitized/master.csv   with columns:
+  output_data/aggregate_master_data.csv   with columns:
     country_name, country_code, aridity_index, population_density_2022,
     income_group, gdp_per_capita_2024
 """
@@ -65,8 +65,8 @@ METADATA_CSV = os.path.join(
 GDP_CSV = os.path.join(
     DATA, 'GDP_Per_Capita_2024_worldbank_Data.csv')
 
-OUTPUT_DIR = os.path.join(BASE, 'data_sanitized')
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'master.csv')
+OUTPUT_DIR = os.path.join(BASE, 'output_data')
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'aggregate_master_data.csv')
 ARIDITY_GRID_FILE = os.path.join(OUTPUT_DIR, 'aridity_grid.csv')
 
 # ---------------------------------------------------------------------------

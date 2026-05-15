@@ -1,14 +1,14 @@
 """
-visualize_master.py
--------------------
-Flask web app that displays master.csv on an interactive Plotly
+visualize_master_data.py
+------------------------
+Flask web app that displays aggregated_master_data.csv on an interactive Plotly
 choropleth world map.  Hover shows all metrics per country.
 Aridity Index is rendered as a pixel-level heatmap overlay from
 aridity_grid.csv for spatial detail.
 
 Usage:
     pip install flask plotly
-    python visualize_master.py
+    python visualize_master_data.py
     → opens http://127.0.0.1:5000 in the browser
 """
 
@@ -24,8 +24,8 @@ from flask import Flask, render_template_string
 # Config
 # ---------------------------------------------------------------------------
 BASE = os.path.dirname(__file__)
-MASTER_CSV = os.path.join(BASE, 'data_sanitized', 'master.csv')
-ARIDITY_GRID_CSV = os.path.join(BASE, 'data_sanitized', 'aridity_grid.csv')
+MASTER_CSV = os.path.join(BASE, 'output_data', 'aggregated_master_data.csv')
+ARIDITY_GRID_CSV = os.path.join(BASE, 'output_data', 'aridity_grid.csv')
 
 app = Flask(__name__)
 

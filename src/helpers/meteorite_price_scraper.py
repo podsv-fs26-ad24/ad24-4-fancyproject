@@ -30,7 +30,7 @@ async def run():
                 print(f" [!] Skip Page {i}: {e}")
                 continue
 
-        with open("scraper_unique_urls.txt", "w") as f:
+        with open("data_aquisition/meteorite_prices_src_urls.txt", "w") as f:
             for url in sorted(list(unique_urls)):
                 f.write(url + "\n")
 
@@ -97,12 +97,12 @@ async def run():
 
         await browser.close()
 
-    with open('prices.csv', 'w', newline='', encoding='utf-8') as f:
+    with open('data_aquisition/meteorite_prices.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=["name", "description", "price", "category", "mass"])
         writer.writeheader()
         writer.writerows(results)
     
-    print(f"Done. Processed {len(results)} items into prices.csv")
+    print(f"Done. Processed {len(results)} items into meteorite_prices.csv")
 
 if __name__ == "__main__":
     asyncio.run(run())

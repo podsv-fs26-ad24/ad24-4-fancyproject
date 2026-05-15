@@ -2,8 +2,8 @@ import pandas as pd
 import os
 
 # Define file paths
-INPUT_FILE = os.path.join(os.path.dirname(__file__), '..', 'meteorite_prices.csv')
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), '../..', 'data_sanitized/meteorite_prices_sanitized.csv')
+INPUT_FILE = os.path.join(os.path.dirname(__file__), 'data_aquisition/meteorite_prices.csv')
+OUTPUT_FILE = os.path.join(os.path.dirname(__file__), 'data_sanitized/meteorite_prices_sanitized.csv')
 
 # Mapping from the prices dataset category names to the valid recclass values
 # found in Meteorite_Landings_NASA_sanitized.csv.
