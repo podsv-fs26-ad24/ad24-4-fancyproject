@@ -52,7 +52,7 @@ BASE = os.path.dirname(__file__)
 DATA = os.path.join(BASE, 'data_acquisition')
 
 ARIDITY_TIF = os.path.join(
-    DATA, 'Global-AridityIndex_v3_annual', 'et0_v3_yr_sd.tif')
+    DATA, 'Global-AridityIndex_v3_annual', 'ai_v3_yr.tif')
 
 POP_DENSITY_CSV = os.path.join(
     DATA, 'API_EN.POP.DNST_DS2_en_csv_v2_1453',
@@ -67,18 +67,77 @@ GDP_CSV = os.path.join(
 
 OUTPUT_DIR = os.path.join(BASE, 'data_sanitized')
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'master.csv')
+ARIDITY_GRID_FILE = os.path.join(OUTPUT_DIR, 'aridity_grid.csv')
 
 # ---------------------------------------------------------------------------
-# 1.  Aridity Index  → country-level mean
+# 1a.  Aridity grid  → pixel-level lat/lon/value for heatmap
 # ---------------------------------------------------------------------------
-DOWNSAMPLE_FACTOR = 50  # 50× smaller on each axis
+GRID_DOWNSAMPLE = 100   # ~1° resolution → ~30-40K land points
+COUNTRY_DOWNSAMPLE = 50 # coarser for per-country mean (faster)
+
+
+def _read_aridity_raster(downsample: int):
+    """
+    Read the aridity GeoTIFF downsampled by *downsample* factor.
+    Returns (lats, lons, values) as 1-D numpy arrays of valid land pixels.
+    """
+    with rasterio.open(ARIDITY_TIF) as src:
+        out_h = src.height // downsample
+        out_w = src.width // downsample
+        data = src.read(
+            1,
+            out_shape=(out_h, out_w),
+            resampling=Resampling.average,
+        ).astype(np.float64)
+
+        nodata_val = src.nodata
+        bounds = src.bounds
+        transform = rasterio.transform.from_bounds(
+            bounds.left, bounds.bottom, bounds.right, bounds.top,
+            out_w, out_h)
+
+    # Mask invalid pixels
+    if nodata_val is not None:
+        data[data == nodata_val] = np.nan
+    data[data < 0] = np.nan
+    # CGIAR AI values are stored as int × 10 000; scale to real index
+    # Real AI range: 0.0 (hyper-arid) → ~2+ (humid)
+    # Raw pixel range after scaling: 0 – ~30 000
+    # If max is > 100 the data is likely in the ×10 000 encoding
+    if np.nanmax(data) > 100:
+        data = data / 10000.0
+
+    rows, cols = np.where(~np.isnan(data))
+    xs, ys = rasterio.transform.xy(transform, rows, cols)
+    return np.array(ys), np.array(xs), data[rows, cols]
+
+
+def _export_aridity_grid() -> str:
+    """
+    Export aridity as a pixel grid CSV (lat, lon, aridity_index).
+    Returns the output path.
+    """
+    if not HAS_RASTERIO:
+        print("[WARN] rasterio not installed – skipping aridity grid.")
+        return ''
+
+    print(f"Exporting aridity grid (downsample {GRID_DOWNSAMPLE}×) …")
+    lats, lons, values = _read_aridity_raster(GRID_DOWNSAMPLE)
+    grid = pd.DataFrame({
+        'lat': np.round(lats, 4),
+        'lon': np.round(lons, 4),
+        'aridity_index': np.round(values, 4),
+    })
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    grid.to_csv(ARIDITY_GRID_FILE, index=False)
+    print(f"  {len(grid):,} pixels → {ARIDITY_GRID_FILE}")
+    return ARIDITY_GRID_FILE
 
 
 def _load_aridity_by_country() -> pd.DataFrame:
     """
-    Read the aridity GeoTIFF, downsample heavily, reverse-geocode every
-    valid pixel to a country, and return a DataFrame with columns
-    [country_code, aridity_index].
+    Compute a per-country mean aridity index via reverse-geocoding.
+    Used for the master.csv country-level merge.
     """
     if not HAS_RASTERIO:
         print("[WARN] rasterio not installed – skipping aridity data.")
@@ -87,61 +146,23 @@ def _load_aridity_by_country() -> pd.DataFrame:
         print("[WARN] reverse_geocoder not installed – skipping aridity data.")
         return pd.DataFrame(columns=['country_code', 'aridity_index'])
 
-    print("Reading aridity GeoTIFF (downsampled) …")
-    with rasterio.open(ARIDITY_TIF) as src:
-        out_h = src.height // DOWNSAMPLE_FACTOR
-        out_w = src.width // DOWNSAMPLE_FACTOR
-        data = src.read(
-            1,
-            out_shape=(out_h, out_w),
-            resampling=Resampling.average,
-        ).astype(np.float64)
-
-        # Build a coordinate grid for the downsampled raster
-        transform = src.transform * src.transform.scale(
-            src.width / out_w, src.height / out_h)
-
-    # NoData → NaN
-    data[data < 0] = np.nan
-
-    # Build (lat, lon) for every pixel
-    rows, cols = np.where(~np.isnan(data))
-    xs, ys = rasterio.transform.xy(transform, rows, cols)
-    lats = np.array(ys)  # y = latitude
-    lons = np.array(xs)  # x = longitude
-    # rasterio.transform.xy returns (x, y), i.e. (lon, lat)
-    lats, lons = np.array(ys), np.array(xs)
-
-    # Correct: rasterio.transform.xy returns (x=lon, y=lat) when given row,col
-    # Actually it returns lists of x-coords and y-coords:
-    # xs are longitudes, ys are latitudes... let's just look at the TFW:
-    # line 5 = -179.99583  -> left lon
-    # line 6 = 89.99583    -> top lat
-    # So x = longitude, y = latitude. rasterio.transform.xy(transform, row, col)
-    # returns (x, y) = (lon, lat).
-    lons = np.array(xs)
-    lats = np.array(ys)
-
-    values = data[rows, cols]
+    print(f"Computing per-country aridity mean (downsample {COUNTRY_DOWNSAMPLE}×) …")
+    lats, lons, values = _read_aridity_raster(COUNTRY_DOWNSAMPLE)
 
     print(f"  {len(values):,} valid pixels – reverse-geocoding …")
     coords = list(zip(lats.tolist(), lons.tolist()))
     results = rg.search(coords)
-
     cc_list = [r['cc'] for r in results]
 
-    df = pd.DataFrame({
-        'country_code': cc_list,
-        'aridity_value': values,
-    })
+    df = pd.DataFrame({'country_code': cc_list, 'aridity_value': values})
     aridity = (
         df.groupby('country_code')['aridity_value']
         .mean()
         .reset_index()
         .rename(columns={'aridity_value': 'aridity_index'})
     )
-    aridity['aridity_index'] = aridity['aridity_index'].round(2)
-    print(f"  Aridity computed for {len(aridity)} countries.")
+    aridity['aridity_index'] = aridity['aridity_index'].round(4)
+    print(f"  Aridity mean computed for {len(aridity)} countries.")
     return aridity
 
 
@@ -267,7 +288,10 @@ def _iso2_to_iso3_map() -> dict:
 # Main
 # ---------------------------------------------------------------------------
 def build_master():
-    """Merge all four sources into master.csv."""
+    """Merge all four sources into master.csv + aridity_grid.csv."""
+
+    # --- Export pixel-level aridity grid ---
+    _export_aridity_grid()
 
     # --- Load individual datasets ---
     aridity_df = _load_aridity_by_country()

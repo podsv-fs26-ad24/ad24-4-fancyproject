@@ -3,6 +3,8 @@ visualize_master.py
 -------------------
 Flask web app that displays master.csv on an interactive Plotly
 choropleth world map.  Hover shows all metrics per country.
+Aridity Index is rendered as a pixel-level heatmap overlay from
+aridity_grid.csv for spatial detail.
 
 Usage:
     pip install flask plotly
@@ -23,11 +25,12 @@ from flask import Flask, render_template_string
 # ---------------------------------------------------------------------------
 BASE = os.path.dirname(__file__)
 MASTER_CSV = os.path.join(BASE, 'data_sanitized', 'master.csv')
+ARIDITY_GRID_CSV = os.path.join(BASE, 'data_sanitized', 'aridity_grid.csv')
 
 app = Flask(__name__)
 
 # ---------------------------------------------------------------------------
-# HTML template – uses Plotly.js directly (no iframes)
+# HTML template – uses Plotly.js directly
 # ---------------------------------------------------------------------------
 HTML_TEMPLATE = r"""
 <!DOCTYPE html>
@@ -122,38 +125,55 @@ HTML_TEMPLATE = r"""
   <div class="controls">
     <label for="metric">Colour by:</label>
     <select id="metric">
-      <option value="aridity_index">Aridity Index</option>
+      <option value="aridity_heatmap">Aridity Index (Heatmap)</option>
+      <option value="aridity_index">Aridity Index (Country avg)</option>
       <option value="population_density_2022">Population Density (2022)</option>
       <option value="gdp_per_capita_2024">GDP per Capita (2024)</option>
     </select>
   </div>
   <div id="map"></div>
   <div class="stats-bar">
-    <div>Source: <span>master.csv</span></div>
+    <div>Source: <span>master.csv + aridity_grid.csv</span></div>
     <div>Metrics: <span>Aridity · Pop. Density · GDP · Income Class</span></div>
   </div>
 
   <script>
     // ---- data injected from Flask ----
     const DATA = {{ data_json|safe }};
+    const GRID = {{ grid_json|safe }};
 
     const METRIC_LABELS = {
-      aridity_index:            'Aridity Index',
+      aridity_index:            'Aridity Index (avg)',
       population_density_2022:  'Pop. Density (ppl/km²)',
       gdp_per_capita_2024:      'GDP per Capita (USD)',
     };
 
     const SCALES = {
-      aridity_index:            'YlOrRd',
+      aridity_index:            'YlGnBu',
       population_density_2022:  'GrOrRd',
       gdp_per_capita_2024:      'GrOrRd',
     };
 
-    // Clamp colour ranges so outliers don't wash everything out
     const CLAMPS = {
-      aridity_index:            { zmin: 0, zmax: 65000 },
+      aridity_index:            { zmin: 0, zmax: 2.5 },
       population_density_2022:  { zmin: 0, zmax: 500 },
       gdp_per_capita_2024:      { zmin: 0, zmax: 100000 },
+    };
+
+    const GEO_LAYOUT = {
+      showframe:      false,
+      showcoastlines: true,
+      coastlinecolor: '#334155',
+      showland:       true,
+      landcolor:      '#1e1e3a',
+      showocean:      true,
+      oceancolor:     '#0f0f1a',
+      showcountries:  true,
+      countrycolor:   '#334155',
+      showlakes:      true,
+      lakecolor:      '#0f0f1a',
+      projection:     { type: 'natural earth' },
+      bgcolor:        '#0f0f1a',
     };
 
     function fmtNum(v, decimals) {
@@ -171,12 +191,59 @@ HTML_TEMPLATE = r"""
              '<br><b>Region:</b> ' + d.region +
              '<br><b>Income:</b> ' + d.income_group +
              '<br>─────────────────────' +
-             '<br>🌡️ <b>Aridity:</b> '     + fmtNum(d.aridity_index, 2) +
+             '<br>🌡️ <b>Aridity:</b> '     + fmtNum(d.aridity_index, 4) +
              '<br>👥 <b>Pop. Density:</b> ' + fmtNum(d.population_density_2022, 2) + ' /km²' +
              '<br>💰 <b>GDP/cap:</b> $'     + fmtNum(d.gdp_per_capita_2024, 0);
     }
 
-    function renderMap(metric) {
+    // --- Aridity heatmap (pixel-level scattergeo) ---
+    function renderHeatmap() {
+      const trace = {
+        type: 'scattergeo',
+        lat:  GRID.map(p => p.lat),
+        lon:  GRID.map(p => p.lon),
+        mode: 'markers',
+        marker: {
+          size:        4,
+          opacity:     0.7,
+          color:       GRID.map(p => p.aridity_index),
+          colorscale:  'YlGnBu',
+          cmin:        0,
+          cmax:        2.5,
+          colorbar: {
+            title: { text: 'Aridity Index', font: { color: '#94a3b8', size: 12 } },
+            tickfont:    { color: '#94a3b8' },
+            bgcolor:     '#131325',
+            bordercolor: '#334155',
+            len: 0.6,
+          },
+          line: { width: 0 },
+        },
+        hovertemplate:
+          '<b>Aridity Index</b>: %{marker.color:.4f}' +
+          '<br>Lat: %{lat:.2f}°  Lon: %{lon:.2f}°' +
+          '<extra></extra>',
+        hoverlabel: {
+          bgcolor:     '#1e1e3a',
+          bordercolor: '#60a5fa',
+          font: { family: 'Inter, sans-serif', size: 13, color: '#e2e8f0' },
+        },
+      };
+
+      const layout = {
+        geo:            GEO_LAYOUT,
+        paper_bgcolor:  '#0f0f1a',
+        plot_bgcolor:   '#0f0f1a',
+        font:           { family: 'Inter, sans-serif', color: '#e2e8f0' },
+        margin:         { l: 0, r: 0, t: 10, b: 0 },
+        height:         window.innerHeight - 160,
+      };
+
+      Plotly.react('map', [trace], layout, { responsive: true });
+    }
+
+    // --- Country-level choropleth ---
+    function renderChoropleth(metric) {
       const values = DATA.map(d => d[metric]);
       const hoverTexts = DATA.map(d => buildHoverText(d));
       const clamp = CLAMPS[metric];
@@ -209,33 +276,28 @@ HTML_TEMPLATE = r"""
       };
 
       const layout = {
-        geo: {
-          showframe:      false,
-          showcoastlines: true,
-          coastlinecolor: '#334155',
-          showland:       true,
-          landcolor:      '#1e1e3a',
-          showocean:      true,
-          oceancolor:     '#0f0f1a',
-          showcountries:  true,
-          countrycolor:   '#334155',
-          showlakes:      true,
-          lakecolor:      '#0f0f1a',
-          projection:     { type: 'natural earth' },
-          bgcolor:        '#0f0f1a',
-        },
-        paper_bgcolor: '#0f0f1a',
-        plot_bgcolor:  '#0f0f1a',
-        font:          { family: 'Inter, sans-serif', color: '#e2e8f0' },
-        margin:        { l: 0, r: 0, t: 10, b: 0 },
-        height:        window.innerHeight - 160,
+        geo:            GEO_LAYOUT,
+        paper_bgcolor:  '#0f0f1a',
+        plot_bgcolor:   '#0f0f1a',
+        font:           { family: 'Inter, sans-serif', color: '#e2e8f0' },
+        margin:         { l: 0, r: 0, t: 10, b: 0 },
+        height:         window.innerHeight - 160,
       };
 
       Plotly.react('map', [trace], layout, { responsive: true });
     }
 
+    // --- Render dispatcher ---
+    function renderMap(metric) {
+      if (metric === 'aridity_heatmap') {
+        renderHeatmap();
+      } else {
+        renderChoropleth(metric);
+      }
+    }
+
     // initial render
-    renderMap('aridity_index');
+    renderMap('aridity_heatmap');
 
     // dropdown switch
     document.getElementById('metric').addEventListener('change', function() {
@@ -258,12 +320,21 @@ HTML_TEMPLATE = r"""
 @app.route('/')
 def index():
     df = pd.read_csv(MASTER_CSV)
-    # Convert to list-of-dicts for JS consumption
+
+    # Load aridity grid (if available)
+    grid = []
+    if os.path.exists(ARIDITY_GRID_CSV):
+        gdf = pd.read_csv(ARIDITY_GRID_CSV)
+        grid = gdf.to_dict(orient='records')
+
     data_json = json.dumps(df.to_dict(orient='records'))
+    grid_json = json.dumps(grid)
+
     return render_template_string(
         HTML_TEMPLATE,
         n_countries=len(df),
         data_json=data_json,
+        grid_json=grid_json,
     )
 
 
