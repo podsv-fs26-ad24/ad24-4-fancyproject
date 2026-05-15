@@ -36,6 +36,10 @@ ARIDITY_GRID_CSV = ROOT / "output_data" / "aridity_grid.csv"
 df = pd.read_csv(MASTER_CSV)
 grid = pd.read_csv(ARIDITY_GRID_CSV)
 
+# Drop ocean / no-data points: real land aridity is always > 0, only
+# ocean and no-data pixels sit at exactly 0 and would flood the map.
+grid = grid[grid["aridity_index"] > 0]
+
 # --- Pastel palette (shared with the docs theme) ---------------------------
 PAPER = "#cacaca"
 INK = "#2f3142"
