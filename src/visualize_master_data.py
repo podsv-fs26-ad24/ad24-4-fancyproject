@@ -15,17 +15,18 @@ Usage:
 import json
 import os
 import webbrowser
+from pathlib import Path
 from threading import Timer
 
 import pandas as pd
 from flask import Flask, render_template_string
 
 # ---------------------------------------------------------------------------
-# Config
+# Config – paths resolved from this file so the app runs from any CWD
 # ---------------------------------------------------------------------------
-BASE = os.path.dirname(__file__)
-MASTER_CSV = os.path.join(BASE, 'output_data', 'aggregated_master_data.csv')
-ARIDITY_GRID_CSV = os.path.join(BASE, 'output_data', 'aridity_grid.csv')
+ROOT = Path(__file__).resolve().parents[1]
+MASTER_CSV = str(ROOT / 'output_data' / 'aggregated_master_data.csv')
+ARIDITY_GRID_CSV = str(ROOT / 'output_data' / 'aridity_grid.csv')
 
 app = Flask(__name__)
 

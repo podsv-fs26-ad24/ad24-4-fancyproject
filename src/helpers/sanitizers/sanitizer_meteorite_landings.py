@@ -1,10 +1,12 @@
 import pandas as pd
 import re
-import os
+from pathlib import Path
 
-# Define file paths
-INPUT_FILE = os.path.join(os.path.dirname(__file__), 'data_aquisition/Meteorite_Landings_NASA.csv')
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), 'data_sanitized/Meteorite_Landings_NASA_sanitized.csv')
+# Repository root, resolved from this file so the script runs from any CWD
+ROOT = Path(__file__).resolve().parents[3]
+
+INPUT_FILE = ROOT / 'data_acquisition' / 'Meteorite_Landings_NASA.csv'
+OUTPUT_FILE = ROOT / 'data_sanitized' / 'Meteorite_Landings_NASA_sanitized.csv'
 
 # Characters that are not allowed in the recclass column
 INVALID_RECCLASS_CHARS = re.compile(r'[/?()\~]')

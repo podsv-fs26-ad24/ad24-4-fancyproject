@@ -1,9 +1,11 @@
 import pandas as pd
-import os
+from pathlib import Path
 
-# Define file paths
-INPUT_FILE = os.path.join(os.path.dirname(__file__), 'data_aquisition/meteorite_prices.csv')
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), 'data_sanitized/meteorite_prices_sanitized.csv')
+# Repository root, resolved from this file so the script runs from any CWD
+ROOT = Path(__file__).resolve().parents[3]
+
+INPUT_FILE = ROOT / 'data_acquisition' / 'meteorite_prices.csv'
+OUTPUT_FILE = ROOT / 'data_sanitized' / 'meteorite_prices_sanitized.csv'
 
 # Mapping from the prices dataset category names to the valid recclass values
 # found in Meteorite_Landings_NASA_sanitized.csv.

@@ -1,7 +1,14 @@
 import re
 import csv
 import asyncio
+from pathlib import Path
 from playwright.async_api import async_playwright
+
+# Repository root, resolved from this file so the script runs from any CWD
+ROOT = Path(__file__).resolve().parents[2]
+DATA_ACQUISITION = ROOT / 'data_acquisition'
+URLS_FILE = DATA_ACQUISITION / 'meteorite_prices_src_urls.txt'
+PRICES_FILE = DATA_ACQUISITION / 'meteorite_prices.csv'
 
 async def run():
     base_url = "https://www.meteorites-for-sale.com/catalog-updates.html"
@@ -30,7 +37,8 @@ async def run():
                 print(f" [!] Skip Page {i}: {e}")
                 continue
 
-        with open("data_aquisition/meteorite_prices_src_urls.txt", "w") as f:
+        DATA_ACQUISITION.mkdir(parents=True, exist_ok=True)
+        with open(URLS_FILE, "w") as f:
             for url in sorted(list(unique_urls)):
                 f.write(url + "\n")
 
@@ -97,8 +105,10 @@ async def run():
 
         await browser.close()
 
-    with open('data_aquisition/meteorite_prices.csv', 'w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=["name", "description", "price", "category", "mass"])
+    with open(PRICES_FILE, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(
+            f, fieldnames=["name", "description", "price", "category", "mass"],
+            delimiter=';')
         writer.writeheader()
         writer.writerows(results)
     

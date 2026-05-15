@@ -1,14 +1,14 @@
 import pandas as pd
 import numpy as np
-import os
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# File paths
+# File paths – resolved from this file so the script runs from any CWD
 # ---------------------------------------------------------------------------
-BASE_DIR = os.path.join(os.path.dirname(__file__), 'data_sanitized')
-NASA_FILE = os.path.join(BASE_DIR, 'Meteorite_Landings_NASA_sanitized.csv')
-PRICES_FILE = os.path.join(BASE_DIR, 'meteorite_prices_sanitized.csv')
-OUTPUT_FILE = os.path.join('output_data', 'Meteorite_Landings_NASA_with_prices.csv')
+ROOT = Path(__file__).resolve().parents[2]
+NASA_FILE = ROOT / 'data_sanitized' / 'Meteorite_Landings_NASA_sanitized.csv'
+PRICES_FILE = ROOT / 'data_sanitized' / 'meteorite_prices_sanitized.csv'
+OUTPUT_FILE = ROOT / 'output_data' / 'Meteorite_Landings_NASA_with_prices.csv'
 
 
 def _build_price_model(prices_df: pd.DataFrame) -> dict:
@@ -88,6 +88,7 @@ def predict_prices(nasa_path: str, prices_path: str, output_path: str) -> pd.Dat
           f"({total - priced} entries set to $0).")
 
     # Save result
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     nasa_df.to_csv(output_path, index=False)
     print(f"Output saved to: {output_path}")
 

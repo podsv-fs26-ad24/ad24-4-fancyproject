@@ -22,7 +22,7 @@ compute a *country-level* aridity average by:
 
 Output
 ------
-  output_data/aggregate_master_data.csv   with columns:
+  output_data/aggregated_master_data.csv   with columns:
     country_name, country_code, aridity_index, population_density_2022,
     income_group, gdp_per_capita_2024
 """
@@ -30,6 +30,7 @@ Output
 import os
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 # Try to import rasterio & reverse_geocoder; they are optional heavy deps
 try:
@@ -48,25 +49,24 @@ except ImportError:
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-BASE = os.path.dirname(__file__)
-DATA = os.path.join(BASE, 'data_acquisition')
+# Repository root, resolved from this file so the script runs from any CWD
+ROOT = Path(__file__).resolve().parents[2]
+DATA = ROOT / 'data_acquisition'
 
-ARIDITY_TIF = os.path.join(
-    DATA, 'Global-AridityIndex_v3_annual', 'ai_v3_yr.tif')
+ARIDITY_TIF = str(DATA / 'Global-AridityIndex_v3_annual' / 'ai_v3_yr.tif')
 
-POP_DENSITY_CSV = os.path.join(
-    DATA, 'API_EN.POP.DNST_DS2_en_csv_v2_1453',
-    'API_EN.POP.DNST_DS2_en_csv_v2_1453.csv')
+POP_DENSITY_CSV = str(
+    DATA / 'API_EN.POP.DNST_DS2_en_csv_v2_1453'
+    / 'API_EN.POP.DNST_DS2_en_csv_v2_1453.csv')
 
-METADATA_CSV = os.path.join(
-    DATA, 'API_EN.POP.DNST_DS2_en_csv_v2_1453',
-    'Metadata_Country_API_EN.POP.DNST_DS2_en_csv_v2_1453.csv')
+METADATA_CSV = str(
+    DATA / 'API_EN.POP.DNST_DS2_en_csv_v2_1453'
+    / 'Metadata_Country_API_EN.POP.DNST_DS2_en_csv_v2_1453.csv')
 
-GDP_CSV = os.path.join(
-    DATA, 'GDP_Per_Capita_2024_worldbank_Data.csv')
+GDP_CSV = str(DATA / 'GDP_Per_Capita_2024_worldbank_Data.csv')
 
-OUTPUT_DIR = os.path.join(BASE, 'output_data')
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'aggregate_master_data.csv')
+OUTPUT_DIR = str(ROOT / 'output_data')
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'aggregated_master_data.csv')
 ARIDITY_GRID_FILE = os.path.join(OUTPUT_DIR, 'aridity_grid.csv')
 
 # ---------------------------------------------------------------------------
