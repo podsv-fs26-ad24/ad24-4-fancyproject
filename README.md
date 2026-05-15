@@ -105,6 +105,8 @@ data changes; the generated files are already provided in `output_data/`.
 uv sync
 
 # 1. (optional) re-scrape meteorite prices  → data_acquisition/meteorite_prices.csv
+#    Only if re-scraping: install the Playwright browser binary once
+uv run playwright install chromium
 uv run python src/helpers/meteorite_price_scraper.py
 
 # 2. sanitise the raw datasets              → data_sanitized/*.csv
