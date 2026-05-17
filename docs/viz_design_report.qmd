@@ -67,4 +67,4 @@ Document key design decisions, alternatives considered and the rationale for the
 * **Iteration history**: If the design evolved through multiple iterations (e.g. based on informal feedback or internal reviews), briefly describe the key changes and their motivation.
 
 ## Conclusions and Next Steps
-Summarise the key design decisions and their expected impact on the project objectives. Identify open questions, known limitations of the current prototype and topics to be addressed in the [Evaluation](evaluation.qmd) phase.
+Summarise the key design decisions and their expected impact on the project objectives. Identify open questions, known limitations of the current prototype and topics to be addressed in the Evaluation phase.

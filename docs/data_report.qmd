@@ -152,35 +152,7 @@ The raster is far too dense to use directly, so it is downsampled twice: a coars
 
 The following figure illustrates the mass distribution of the sanitised meteorite dataset, which motivates the use of a log scale and a median-based price model in the visual encoding:
 
-```{python}
-#| label: fig-mass-dist
-#| fig-cap: "Distribution of meteorite mass (log scale) in the sanitised NASA dataset. The strong right skew motivates a median-based, per-class price-per-gram model."
-#| echo: true
-#| code-fold: true
-from pathlib import Path
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-ROOT = Path.cwd()
-while not (ROOT / "data_sanitized").exists() and ROOT != ROOT.parent:
-    ROOT = ROOT.parent
-
-nasa = pd.read_csv(ROOT / "data_sanitized" / "Meteorite_Landings_NASA_sanitized.csv")
-mass = nasa["mass (g)"]
-mass = mass[mass > 0]
-
-fig, ax = plt.subplots(figsize=(6, 3.75))
-ax.hist(np.log10(mass), bins=50, color="#8b80d6", edgecolor="white")
-ax.set_xlabel("log₁₀(mass in g)")
-ax.set_ylabel("Number of meteorites")
-ax.set_title("Meteorite mass distribution (sanitised)")
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-plt.tight_layout()
-plt.show()
-```
+![Distribution of meteorite mass (log scale) in the sanitised NASA dataset. The strong right skew motivates a median-based, per-class price-per-gram model.](pics/fig-mass-dist-output-1.png){#fig-mass-dist}
 
 The mass distribution in @fig-mass-dist spans many orders of magnitude, which is why prices are modelled per `recclass` as a robust median price-per-gram rather than via a mean.
 
