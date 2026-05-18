@@ -1,4 +1,4 @@
-# Meteorites, Aridity & Wealth
+# The Meteorite Illusion: Exposing Human Bias in the Search for Cosmic Treasure
 
 A data visualization project using Python, uv for environment and package management and Quarto for documentation.
 

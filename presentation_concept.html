@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentation Concept:  <b>The Meteorite Illusion</b>: Exposing Human Bias in the Search for Cosmic Treasure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fbfaf7; --surface:#ffffff; --ink:#2f3142; --ink-soft:#6a6c7d;
+    --line:#e9e6df; --lavender:#8b80d6; --lavender-50:#ece9f8;
+    --blue:#7fa8d9; --blue-50:#e8f0fa; --mint:#7fc8b0; --peach:#e8a98c;
+    --peach-50:#fbede4; --rose:#df8fa6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.65;
+    -webkit-font-smoothing:antialiased;padding:2.5rem 1.5rem;
+  }
+  .wrap{max-width:920px;margin:0 auto}
+  h1,h2,h3{font-family:'Source Serif 4',Georgia,serif;letter-spacing:-.01em;line-height:1.25}
+  header.title{
+    background:linear-gradient(135deg,var(--lavender-50) 0%,var(--blue-50) 55%,var(--peach-50) 100%);
+    border:1px solid var(--line);border-radius:16px;padding:2.25rem 2.25rem;
+    box-shadow:0 1px 2px rgba(47,49,66,.04),0 6px 18px rgba(47,49,66,.05);
+    margin-bottom:1.75rem;
+  }
+  header.title h1{font-size:2rem;font-weight:700;margin-bottom:.4rem}
+  header.title p{color:var(--ink-soft);font-size:1rem}
+  .meta{margin-top:.9rem;font-size:.85rem;color:var(--ink-soft)}
+  .meta strong{color:var(--ink)}
+  section{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:1.5rem 1.75rem;margin-bottom:1.25rem;
+    box-shadow:0 1px 2px rgba(47,49,66,.04),0 6px 16px rgba(47,49,66,.04);
+  }
+  section h2{
+    font-size:1.25rem;font-weight:700;color:var(--ink);
+    border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.9rem;
+    display:flex;align-items:center;gap:.6rem;
+  }
+  .tag{
+    font-family:'Inter',sans-serif;font-size:.62rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.08em;color:var(--lavender);
+    background:var(--lavender-50);padding:.2rem .55rem;border-radius:999px;
+  }
+  h3{font-size:1rem;font-weight:600;margin:1rem 0 .4rem}
+  ul{margin:.3rem 0 .3rem 1.2rem}
+  li{margin:.32rem 0;font-size:.96rem}
+  li::marker{color:var(--lavender)}
+  p{margin:.5rem 0;font-size:.96rem}
+  .lead{color:var(--ink-soft)}
+  .flow{counter-reset:step;list-style:none;margin-left:0}
+  .flow li{counter-increment:step;position:relative;padding-left:2.2rem;margin:.55rem 0}
+  .flow li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.55rem;height:1.55rem;border-radius:50%;
+    background:var(--lavender);color:#fff;font-size:.8rem;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .callout{
+    border-left:4px solid var(--blue);background:var(--blue-50);
+    border-radius:0 10px 10px 0;padding:.85rem 1.1rem;margin:.9rem 0;font-size:.93rem;
+  }
+  a{color:var(--lavender);text-decoration:none;font-weight:600}
+  a:hover{text-decoration:underline;text-underline-offset:2px}
+  .links a{
+    display:inline-block;background:var(--lavender-50);border:1px solid var(--line);
+    border-radius:9px;padding:.5rem .85rem;margin:.3rem .4rem .3rem 0;font-size:.9rem;
+  }
+  .links a:hover{border-color:var(--lavender);text-decoration:none}
+  code{background:var(--lavender-50);padding:.12em .4em;border-radius:5px;font-size:.88em}
+  footer{color:var(--ink-soft);font-size:.82rem;text-align:center;margin-top:1.5rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="title">
+    <h1>Presentation Concept:  Tool Demo</h1>
+    <p class="lead">The Meteorite Illusion: Exposing Human Bias in the Search for Cosmic Treasure. </p>
+    <div class="meta">
+      <strong>Format:</strong> Interactive visual demo (no slides). This document provides the required briefing in bullet-point form, as permitted for tool demos. &nbsp;·&nbsp;
+      <strong>Course:</strong> PODSV FS26
+    </div>
+  </header>
+
+  <section>
+    <h2><span class="tag">1</span> Topic &amp; Main Goal</h2>
+    <p><strong>Topic:</strong> A socio-economic, geographic and economic analysis of meteorite discoveries worldwide. NASA records <em>where meteorites were found</em>, but this data is heavily biased by human presence and environmental conditions.</p>
+    <h3>Main goal</h3>
+    <ul>
+      <li>Deconstruct the <strong>“Discovery Gap”</strong>: show that meteorite-finding maps are largely maps of human activity and geography.</li>
+      <li>Correlate NASA finds with <strong>population density</strong> (human presence), <strong>aridity</strong> (preservation potential) and <strong>GDP per capita</strong> (economic context).</li>
+      <li>Integrate a <strong>market-value estimation</strong> based on meteorite classification (<code>recclass</code>) and mass:  a “Fair Value” benchmark.</li>
+      <li>Optional milestone:Shift from a map of <em>findings</em> to an interactive <strong>Opportunity &amp; Value Map</strong> that protects collectors from fraud and helps explorers locate high-potential, unrecorded search zones.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="tag">2</span> Target Group</h2>
+    <ul>
+      <li><strong>Meteorite collectors &amp; investors</strong> (Persona “Lukas”, amateur investor): need independent price benchmarks to avoid overpaying for scam or fake listings.</li>
+      <li><strong>Expedition planners / field hunters</strong> (Persona “Sarah”, professional geologist): seek under-searched, high-preservation zones with low human search history.</li>
+      <li><strong>Secondary:</strong> lecturers evaluating analytical depth and the handling of data bias; the project team itself.</li>
+    </ul>
+    <div class="callout">Primary audience for the demo: collectors/investors and field hunters:  people who need to turn a biased “finds” map into actionable opportunity and value insight.</div>
+  </section>
+
+  <section>
+    <h2><span class="tag">3</span> Narrative Elements &amp; How They Are Expressed</h2>
+    <p>The product is a guided <strong>data story</strong> with light exploration, structured as a three-act arc:</p>
+    <ul>
+      <li><strong>The Illusion</strong>:  NASA’s raw finds map, which appears to show where meteorites “are”.</li>
+      <li><strong>The Explanation</strong>:  overlay human and environmental filters (population density, GDP, aridity) to expose the bias.</li>
+      <li><strong>The Revelation</strong>(optional):  the Opportunity Map plus the estimated financial worth of undiscovered falls.</li>
+    </ul>
+    <h3>Expressed by means of…</h3>
+    <ul>
+      <li><strong>Visualisations:</strong> interactive Plotly world map:  country-level choropleth (aridity, population density, GDP) plus a pixel-level aridity heatmap; metric switcher to move between narrative acts.</li>
+      <li><strong>Media:</strong> web-based Quarto application published on GitHub Pages; an interactive demo instead of static slides.</li>
+      <li><strong>Dramatization:</strong> the deliberate “illusion → reality” reveal; toggling layers visibly dismantles the naïve reading of the raw map.</li>
+      <li><strong>Rhetorics:</strong> framing finds as a proxy for <em>human activity</em>, not meteorite abundance; the “Fair Value” tooltip as a trust/anti-scam device.</li>
+      <li><strong>Annotation:</strong> short explanatory text per view to reduce cognitive load and guide interpretation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="tag">4</span> Aspects We Expect Feedback On</h2>
+    <ul>
+      <li>Does the <strong>“Discovery Gap” narrative</strong> (illusion → explanation → revelation) come across clearly and convincingly?</li>
+      <li>Is the <strong>Estimated Market Value</strong> model (median price-per-gram per <code>recclass</code>) credible and useful as a benchmark, given the limited available price dataset?</li>
+      <li>Is the <strong>data-bias message</strong> (finds ≈ human presence) communicated effectively to a non-expert audience?</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="tag">5</span> Presentation Concept (Tool Demo, no slides)</h2>
+    <ol class="flow">
+      <li><strong>Intro:</strong> state topic, main goal and target group.</li>
+      <li><strong>The Illusion:</strong> open the raw NASA distribution / aridity heatmap and let it “mislead”.</li>
+      <li><strong>The Explanation:</strong> switch metrics (population density → GDP → aridity) to expose the human/geographic bias.</li>
+      <li><strong>The Revelation:</strong> use hover tooltips for per-country detail and the “Fair Value” estimate; point out high-potential under-searched zones.</li>
+      <li><strong>Wrap &amp; feedback:</strong> restate the Discovery-Gap takeaway and ask the audience for feedback on the points in section 4.</li>
+    </ol>
+    <h3>Link to the visualization product</h3>
+    <p class="links">
+      <a href="https://podsv-fs26-ad24.github.io/ad24-4-fancyproject/">Documentation site</a>
+      <a href="https://podsv-fs26-ad24.github.io/ad24-4-fancyproject/interactive_map.html">Interactive World Map</a>
+      <a href="https://github.com/podsv-fs26-ad24/ad24-4-fancyproject">Source repository</a>
+    </p>
+    <p class="lead">Local alternative (full Flask app): <code>uv run python src/visualize_master_data.py</code> → <code>http://127.0.0.1:5000</code>.</p>
+  </section>
+
+  <section>
+    <h2><span class="tag">i</span> Team</h2>
+    <ul>
+      <li><strong>Baskaran Amutha</strong> (baskaamu):  Project lead, Technical setup, data integration &amp; visualization</li>
+      <li><strong>Eros Palumbo</strong> (palero01):   Concept idea, visualization &amp; socio-economic analysis</li>
+      <li><strong>Nicolas Schwaiger</strong> (schwani8):  Design, visualization &amp; layout support</li>
+    </ul>
+  </section>
+
+  <footer>The Meteorite Illusion: Exposing Human Bias in the Search for Cosmic Treasure · PODSV FS26 · ad24-4-fancyproject:  presentation concept for an interactive tool demo.</footer>
+
+</div>
+</body>
+</html>

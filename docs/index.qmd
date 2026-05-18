@@ -1,6 +1,14 @@
-# Overview 
+# The Meteorite Illusion: Exposing Human Bias in the Search for Cosmic Treasure
 
-This documentation describes the conception, development and evaluation of a data visualisation product. The goal of the project is to ....
+## Overview 
+
+This documentation describes the conception, development and evaluation of a data visualisation product. A socio-economic, geographic and economic analysis of meteorite discoveries worldwide. NASA records where meteorites were found, but this data is heavily biased by human presence and environmental conditions.
+
+## Main goal: 
+- Deconstruct the “Discovery Gap”: show that meteorite-finding maps are largely maps of human activity and geography.
+- Correlate NASA finds with population density (human presence), aridity (preservation potential) and GDP per capita (economic context).
+- Integrate a market-value estimation based on meteorite classification (recclass) and mass: a “Fair Value” benchmark.
+- Optional milestone: Shift from a map of findings to an interactive Opportunity & Value Map that protects collectors from fraud and helps explorers locate high-potential, unrecorded search zones.
 
 ![The vizualization product development process](pics/vizproductprocess.png){#fig-vizprocess}
 

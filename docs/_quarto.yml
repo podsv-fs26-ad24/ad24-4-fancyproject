@@ -7,8 +7,8 @@ language:
   section-title-appendices: "Appendix"
 
 website:
-  title: "Meteorites, Aridity & Wealth"
-  description: "Global meteorite landings, aridity, population density and wealth — an interactive data visualization product."
+  title: "The Meteorite Illusion: Exposing Human Bias in the Search for Cosmic Treasure"
+  description: "Global meteorite landings, aridity, population density and wealth, an interactive data visualization product."
   search: true
   page-navigation: true
   sidebar:
