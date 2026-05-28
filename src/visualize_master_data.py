@@ -18,8 +18,10 @@ import webbrowser
 from pathlib import Path
 from threading import Timer
 
+import numpy as np
 import pandas as pd
 from flask import Flask, render_template_string
+from scipy.ndimage import gaussian_filter
 
 # ---------------------------------------------------------------------------
 # Config – paths resolved from this file so the app runs from any CWD
@@ -27,6 +29,10 @@ from flask import Flask, render_template_string
 ROOT = Path(__file__).resolve().parents[1]
 MASTER_CSV = str(ROOT / 'output_data' / 'aggregated_master_data.csv')
 ARIDITY_GRID_CSV = str(ROOT / 'output_data' / 'aridity_grid.csv')
+METEORITES_CSV = str(
+    ROOT / 'output_data'
+    / 'Meteorite_Landings_NASA_sanitized_clean_coordinates.csv'
+)
 
 app = Flask(__name__)
 
@@ -130,6 +136,7 @@ HTML_TEMPLATE = r"""
       <option value="aridity_index">Aridity Index (Country avg)</option>
       <option value="population_density_2022">Population Density (2022)</option>
       <option value="gdp_per_capita_2024">GDP per Capita (2024)</option>
+      <option value="meteorite_landings">Meteorite Discovery Gap (Heatmap)</option>
     </select>
   </div>
   <div id="map"></div>
@@ -142,6 +149,8 @@ HTML_TEMPLATE = r"""
     // ---- data injected from Flask ----
     const DATA = {{ data_json|safe }};
     const GRID = {{ grid_json|safe }};
+    const LANDING = {{ landing_density_json|safe }};
+    const LANDING_CMAX = {{ landing_cmax }};
 
     const METRIC_LABELS = {
       aridity_index:            'Aridity Index (avg)',
@@ -288,10 +297,91 @@ HTML_TEMPLATE = r"""
       Plotly.react('map', [trace], layout, { responsive: true });
     }
 
+    // --- Meteorite Discovery Gap (land-only heatmap) ---
+    // For each land pixel of the aridity grid we know how many meteorites
+    // have been found in its 1°×1° cell. Assuming meteorites fall uniformly
+    // per km², low-find areas (green) represent the largest "unfound
+    // potential", and high-find areas (red) are the established hotspots.
+    function renderMeteorites() {
+      const text = LANDING.map(d => {
+        const gap = d.count === 0
+          ? '🟢 High unfound potential'
+          : (d.count < 5
+              ? '🟡 Moderate unfound potential'
+              : '🔴 Established find hotspot');
+        return '<b>Discovery Gap</b>' +
+               '<br>─────────────────────' +
+               '<br><b>Cell:</b> ' + Number(d.lat).toFixed(1) + '°, '
+                                   + Number(d.lon).toFixed(1) + '°' +
+               '<br><b>Finds in 1° cell:</b> ' + d.count +
+               '<br>' + gap;
+      });
+
+      const trace = {
+        type: 'scattergeo',
+        lat:  LANDING.map(p => p.lat),
+        lon:  LANDING.map(p => p.lon),
+        mode: 'markers',
+        marker: {
+          // Large, soft circles painted on top of a Gaussian-blurred density
+          // field (smoothing happens server-side). Big translucent dots blend
+          // into a continuous heatmap surface with bloom around hot cells –
+          // no visible squares, just a smooth gradient.
+          size:        14,
+          opacity:     0.55,
+          color:       LANDING.map(p => p.density),
+          // Aggressive multi-stop ramp:
+          //  - Zero / near-zero cells stay deep, saturated green so the
+          //    "unfound" regions really pop out of the map.
+          //  - Any noticeable density crosses into yellow/orange quickly.
+          //  - The top of the scale is reserved for the densest find areas.
+          colorscale:  [
+            [0.00, '#15803d'],   // deep vivid green – truly zero finds
+            [0.05, '#65a30d'],   // light green – essentially zero
+            [0.18, '#facc15'],   // bright yellow – small but real density
+            [0.40, '#f97316'],   // orange – common find region
+            [0.70, '#dc2626'],   // red – established find hotspot
+            [1.00, '#7f1d1d'],   // deep red – top-tier hotspot
+          ],
+          cmin:        0,
+          cmax:        LANDING_CMAX,
+          colorbar: {
+            title: { text: 'Found density (log)', font: { color: '#94a3b8', size: 12 } },
+            tickfont:    { color: '#94a3b8' },
+            bgcolor:     '#131325',
+            bordercolor: '#334155',
+            len: 0.6,
+          },
+          line: { width: 0 },
+        },
+        text: text,
+        hoverinfo: 'text',
+        hoverlabel: {
+          bgcolor:     '#1e1e3a',
+          bordercolor: '#10b981',
+          font: { family: 'Inter, sans-serif', size: 13, color: '#e2e8f0' },
+          align: 'left',
+        },
+      };
+
+      const layout = {
+        geo:            GEO_LAYOUT,
+        paper_bgcolor:  '#0f0f1a',
+        plot_bgcolor:   '#0f0f1a',
+        font:           { family: 'Inter, sans-serif', color: '#e2e8f0' },
+        margin:         { l: 0, r: 0, t: 10, b: 0 },
+        height:         window.innerHeight - 160,
+      };
+
+      Plotly.react('map', [trace], layout, { responsive: true });
+    }
+
     // --- Render dispatcher ---
     function renderMap(metric) {
       if (metric === 'aridity_heatmap') {
         renderHeatmap();
+      } else if (metric === 'meteorite_landings') {
+        renderMeteorites();
       } else {
         renderChoropleth(metric);
       }
@@ -328,14 +418,70 @@ def index():
         gdf = pd.read_csv(ARIDITY_GRID_CSV)
         grid = gdf.to_dict(orient='records')
 
+    # Land-only meteorite *find density* heatmap.
+    #
+    # We bin the cleaned NASA landings (no missing/zero coordinates) into a
+    # global 1°×1° count grid (180 rows × 360 cols), then apply a Gaussian
+    # blur so that hot cells "bleed" into their neighbours – this gives the
+    # smooth heatmap bloom that distinguishes a real density surface from a
+    # checkerboard of discrete squares. We then sample the blurred field
+    # only on the land pixels of the aridity grid, so nothing is drawn over
+    # the ocean. log1p compresses the heavy-tailed distribution (Antarctica
+    # blue ice and a few desert hotspots dominate raw counts) so the
+    # gradient is readable across the rest of the world.
+    landing_density = []
+    landing_cmax = 1.0
+    if os.path.exists(METEORITES_CSV) and os.path.exists(ARIDITY_GRID_CSV):
+        mdf = pd.read_csv(
+            METEORITES_CSV,
+            usecols=['reclat', 'reclong'],
+        ).dropna()
+
+        # 1° global count grid – rows = lat (-90..89), cols = lon (-180..179)
+        lat_idx = np.clip(np.floor(mdf['reclat']).astype(int) + 90, 0, 179)
+        lon_idx = np.clip(np.floor(mdf['reclong']).astype(int) + 180, 0, 359)
+        counts = np.zeros((180, 360), dtype=np.float64)
+        np.add.at(counts, (lat_idx.values, lon_idx.values), 1.0)
+
+        # Gaussian blur ~2.5° kernel → adjacent cells inherit hotspot heat.
+        blurred = gaussian_filter(counts, sigma=2.5, mode='constant')
+
+        land = pd.read_csv(ARIDITY_GRID_CSV)
+        # Drop ocean / no-data pixels (encoded as 0 in the aridity grid).
+        land = land[land['aridity_index'] > 0].copy()
+        li = np.clip(np.floor(land['lat']).astype(int) + 90, 0, 179)
+        lj = np.clip(np.floor(land['lon']).astype(int) + 180, 0, 359)
+
+        land['count'] = counts[li, lj].astype(int)
+        land['smoothed'] = blurred[li, lj]
+        land['density'] = np.log1p(land['smoothed']).round(3)
+
+        # Clamp the colour scale aggressively – at the 80th percentile of
+        # non-zero cells – so that established find regions (US, Europe,
+        # Argentina, …) clearly reach the orange/red band instead of being
+        # crushed against the green floor by Antarctica's extreme tail.
+        non_zero = land.loc[land['smoothed'] > 0, 'density']
+        if len(non_zero):
+            landing_cmax = float(round(non_zero.quantile(0.80), 3))
+        landing_cmax = max(landing_cmax, 0.5)
+
+        landing_density = (
+            land[['lat', 'lon', 'count', 'density']]
+            .round({'lat': 3, 'lon': 3})
+            .to_dict(orient='records')
+        )
+
     data_json = json.dumps(df.to_dict(orient='records'))
     grid_json = json.dumps(grid)
+    landing_density_json = json.dumps(landing_density)
 
     return render_template_string(
         HTML_TEMPLATE,
         n_countries=len(df),
         data_json=data_json,
         grid_json=grid_json,
+        landing_density_json=landing_density_json,
+        landing_cmax=landing_cmax,
     )
 
 
