@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
     /* ===== Pastel design tokens – consistent with the Quarto docs ===== */
     :root {
@@ -339,6 +340,54 @@
       transform: translateY(0);
     }
 
+    /* ===== Plotly canvas inside the existing map-placeholder cards ==== */
+    .map-placeholder.has-map {
+      padding: 0;
+      border-style: solid;
+      border-color: var(--line);
+      min-height: 540px;
+      display: block;
+      background: #0f0f1a;
+    }
+    .map-placeholder.has-map::before { display: none; }
+    .map-canvas {
+      width: 100%;
+      height: 540px;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+    .map-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 10px 12px;
+      background: rgba(15, 15, 26, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .map-toolbar .metric-btn {
+      font-family: var(--sans);
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--map-fg-soft, #94a3b8);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.4rem 0.85rem;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+    }
+    .map-toolbar .metric-btn:hover {
+      color: #e2e8f0;
+      border-color: rgba(127, 168, 217, 0.45);
+    }
+    .map-toolbar .metric-btn.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+    .map-placeholder.has-map .map-canvas.with-toolbar {
+      height: 488px;
+    }
+
     /* Sticky progress bar */
     .progress {
       position: fixed;
@@ -379,13 +428,8 @@
         </div>
       </div>
 
-      <div class="map-placeholder reveal" id="map-a-placeholder">
-        <div class="map-placeholder-inner">
-          <div class="map-tag">Map A</div>
-          <div class="map-headline">Hier kommt die Fund-Karte rein</div>
-          <p class="map-hint">Alle bekannten Meteoritenfunde der NASA-Datenbank — stark gebündelt in wenigen Regionen der Welt.</p>
-          <code class="map-snippet">&lt;iframe src="…/map-a"&gt;&lt;/iframe&gt;</code>
-        </div>
+      <div class="map-placeholder has-map reveal" id="map-a-placeholder">
+        <div class="map-canvas" id="map-a"></div>
       </div>
 
       <div class="story reveal">
@@ -432,13 +476,12 @@
         </div>
       </div>
 
-      <div class="map-placeholder reveal" id="map-b-placeholder">
-        <div class="map-placeholder-inner">
-          <div class="map-tag">Map B</div>
-          <div class="map-headline">Hier kommt die Karte „Wohlstand &amp; Bevölkerung" rein</div>
-          <p class="map-hint">Bevölkerungsdichte (2022) und BIP pro Kopf (2024) als Overlay zu den Meteoritenfunden.</p>
-          <code class="map-snippet">&lt;iframe src="…/map-b"&gt;&lt;/iframe&gt;</code>
+      <div class="map-placeholder has-map reveal" id="map-b-placeholder">
+        <div class="map-toolbar" role="tablist" aria-label="Basiskarte wählen">
+          <button class="metric-btn active" data-metric="gdp_per_capita_2024">GDP per Capita (2024)</button>
+          <button class="metric-btn" data-metric="population_density_2022">Population Density (2022)</button>
         </div>
+        <div class="map-canvas with-toolbar" id="map-b"></div>
       </div>
 
       <div class="story reveal">
@@ -490,13 +533,8 @@
         </div>
       </div>
 
-      <div class="map-placeholder reveal" id="map-c-placeholder">
-        <div class="map-placeholder-inner">
-          <div class="map-tag">Map C</div>
-          <div class="map-headline">Hier kommt die Aridity- &amp; Discovery-Gap-Karte rein</div>
-          <p class="map-hint">Trockenheit (Aridity Index), tatsächliche Funde und die berechnete Meteorite Discovery Gap.</p>
-          <code class="map-snippet">&lt;iframe src="…/map-c"&gt;&lt;/iframe&gt;</code>
-        </div>
+      <div class="map-placeholder has-map reveal" id="map-c-placeholder">
+        <div class="map-canvas" id="map-c"></div>
       </div>
 
       <div class="story reveal">
@@ -584,6 +622,289 @@
     }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
 
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  </script>
+
+  <!-- ================================================================
+       Plotly maps – injected from Flask, ported 1:1 from
+       visualize_master_data.py (data pipeline + scales + clamps + GEO).
+       Each map renders lazily when its placeholder first enters view.
+       ================================================================ -->
+  <script>
+    // ---- Data injected from Flask ------------------------------------
+    const DATA          = {{ data_json|safe }};
+    const GRID          = {{ grid_json|safe }};
+    const POINTS        = {{ points_json|safe }};
+    const LANDING       = {{ landing_density_json|safe }};
+    const LANDING_CMAX  = {{ landing_cmax }};
+
+    // ---- Shared Plotly config (dark canvas, ported from visualiser) --
+    const SCALES = {
+      population_density_2022: 'YlOrRd',
+      gdp_per_capita_2024:     'Viridis',
+    };
+    const CLAMPS = {
+      population_density_2022: { zmin: 0, zmax: 500 },
+      gdp_per_capita_2024:     { zmin: 0, zmax: 100000 },
+    };
+    const METRIC_LABELS = {
+      population_density_2022: 'Pop. Density (ppl/km²)',
+      gdp_per_capita_2024:     'GDP per Capita (USD)',
+    };
+
+    const GEO_LAYOUT = {
+      showframe:      false,
+      showcoastlines: true,
+      coastlinecolor: '#94a3b8',
+      coastlinewidth: 0.8,
+      showland:       true,  landcolor: '#1e1e3a',
+      showocean:      true,  oceancolor: '#0f0f1a',
+      showcountries:  true,  countrycolor: '#94a3b8', countrywidth: 0.7,
+      showlakes:      true,  lakecolor: '#0f0f1a',
+      projection:     { type: 'natural earth' },
+      bgcolor:        '#0f0f1a',
+      lataxis:        { range: [-60, 85] },
+    };
+    const SHARED_LAYOUT = {
+      geo:           GEO_LAYOUT,
+      paper_bgcolor: '#0f0f1a',
+      plot_bgcolor:  '#0f0f1a',
+      font:          { family: 'Inter, sans-serif', color: '#e2e8f0' },
+      margin:        { l: 0, r: 0, t: 0, b: 0 },
+      autosize:      true,
+    };
+    const PLOT_CONFIG = { responsive: true, displayModeBar: false };
+
+    function fmtNum(v, decimals) {
+      if (v == null || isNaN(v)) return '—';
+      return Number(v).toLocaleString('en-US', {
+        minimumFractionDigits: decimals, maximumFractionDigits: decimals,
+      });
+    }
+
+    // Transparent choropleth that draws country borders ABOVE scattergeo
+    // (trace-array order = z-order in Plotly).
+    function buildBorderOverlay(opts) {
+      opts = opts || {};
+      return {
+        type: 'choropleth',
+        locations: DATA.map(d => d.country_code),
+        z: DATA.map(() => 0),
+        colorscale: [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0)']],
+        showscale: false, hoverinfo: 'skip',
+        marker: { line: {
+          color: opts.color || '#cbd5e1',
+          width: opts.width || 0.8,
+        }},
+      };
+    }
+
+    function buildPointsTrace(opts) {
+      opts = opts || {};
+      return {
+        type: 'scattergeo',
+        lat: POINTS.map(p => p.lat),
+        lon: POINTS.map(p => p.lon),
+        mode: 'markers',
+        marker: {
+          size:    opts.size    || 3.5,
+          opacity: opts.opacity || 0.65,
+          color:   opts.color   || '#fbbf24',
+          line:    { color: opts.lineColor || 'rgba(0,0,0,0.45)',
+                     width: opts.lineWidth || 0.25 },
+        },
+        hovertemplate:
+          '<b>Meteorite Fund</b>' +
+          '<br>Lat: %{lat:.2f}°  Lon: %{lon:.2f}°<extra></extra>',
+        hoverlabel: {
+          bgcolor: '#1e1e3a', bordercolor: '#fbbf24',
+          font: { family: 'Inter, sans-serif', size: 12, color: '#e2e8f0' },
+        },
+        name: 'Meteorite finds',
+      };
+    }
+
+    // ================== MAP A – Fund-Punkte ==========================
+    function renderMapA() {
+      Plotly.react('map-a', [
+        buildPointsTrace({ size: 3.5, opacity: 0.7 }),
+        buildBorderOverlay(),
+      ], SHARED_LAYOUT, PLOT_CONFIG);
+    }
+
+    // ================== MAP B – Choropleth + Punkte ==================
+    let currentMetricB = 'gdp_per_capita_2024';
+
+    function buildChoroplethTrace(metric) {
+      const clamp = CLAMPS[metric];
+      const hover = DATA.map(d =>
+        '<b style="font-size:14px">' + d.country_name + '</b>' +
+        '<br>─────────────────────' +
+        '<br><b>Code:</b> ' + d.country_code +
+        '<br><b>Region:</b> ' + d.region +
+        '<br><b>Income:</b> ' + d.income_group +
+        '<br>─────────────────────' +
+        '<br>👥 <b>Pop. Density:</b> ' + fmtNum(d.population_density_2022, 2) + ' /km²' +
+        '<br>💰 <b>GDP/cap:</b> $'     + fmtNum(d.gdp_per_capita_2024, 0)
+      );
+      return {
+        type: 'choropleth',
+        locations: DATA.map(d => d.country_code),
+        z: DATA.map(d => d[metric]),
+        zmin: clamp.zmin, zmax: clamp.zmax,
+        text: hover, hoverinfo: 'text',
+        hoverlabel: {
+          bgcolor: '#1e1e3a', bordercolor: '#60a5fa', align: 'left',
+          font: { family: 'Inter, sans-serif', size: 13, color: '#e2e8f0' },
+        },
+        colorscale: SCALES[metric],
+        colorbar: {
+          title: { text: METRIC_LABELS[metric],
+                   font:  { color: '#94a3b8', size: 12 } },
+          tickfont: { color: '#94a3b8' },
+          bgcolor:  '#131325', bordercolor: '#334155',
+          len: 0.55, x: 0.99,
+        },
+        marker: { line: { color: '#334155', width: 0.4 } },
+        name: METRIC_LABELS[metric],
+      };
+    }
+
+    function renderMapB(metric) {
+      currentMetricB = metric;
+      document.querySelectorAll('#map-b-placeholder .metric-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.metric === metric);
+      });
+      Plotly.react('map-b', [
+        buildChoroplethTrace(metric),
+        buildPointsTrace({ size: 2.8, opacity: 0.78,
+                           color: '#ffffff',
+                           lineColor: 'rgba(0,0,0,0.55)', lineWidth: 0.3 }),
+        buildBorderOverlay({ color: 'rgba(255,255,255,0.25)', width: 0.4 }),
+      ], SHARED_LAYOUT, PLOT_CONFIG);
+    }
+
+    // ================== MAP C – Aridity + Discovery Gap ==============
+    function buildAridityHeatmap() {
+      return {
+        type: 'scattergeo',
+        lat: GRID.map(p => p.lat),
+        lon: GRID.map(p => p.lon),
+        mode: 'markers',
+        marker: {
+          size: 4, opacity: 0.9,
+          color: GRID.map(p => p.aridity_index),
+          colorscale: [
+            [0.000, '#7A1F1D'], [0.012, '#7A1F1D'],
+            [0.012, '#D94E14'], [0.080, '#D94E14'],
+            [0.080, '#F2A134'], [0.200, '#F2A134'],
+            [0.200, '#E6D854'], [0.260, '#E6D854'],
+            [0.260, '#70A945'], [0.600, '#70A945'],
+            [0.600, '#1E5624'], [1.000, '#1E5624'],
+          ],
+          cmin: 0, cmax: 2.5,
+          colorbar: {
+            title: { text: 'Aridity class', font: { color: '#94a3b8', size: 12 } },
+            tickmode: 'array',
+            tickvals: [0.015, 0.115, 0.35, 0.575, 1.075, 2.0],
+            ticktext: ['Hyper-arid', 'Arid', 'Semi-arid',
+                       'Sub-humid',  'Humid', 'Hyper-humid'],
+            tickfont: { color: '#94a3b8' },
+            bgcolor:  '#131325', bordercolor: '#334155',
+            len: 0.55, x: 0.99, xanchor: 'right',
+          },
+          line: { width: 0 },
+        },
+        hovertemplate:
+          '<b>Aridity Index</b>: %{marker.color:.4f}' +
+          '<br>Lat: %{lat:.2f}°  Lon: %{lon:.2f}°<extra></extra>',
+        hoverlabel: {
+          bgcolor: '#1e1e3a', bordercolor: '#60a5fa',
+          font: { family: 'Inter, sans-serif', size: 13, color: '#e2e8f0' },
+        },
+        name: 'Aridity',
+      };
+    }
+
+    function buildDiscoveryGapOverlay() {
+      const text = LANDING.map(d => {
+        const gap = d.count === 0
+          ? '🟢 High unfound potential'
+          : (d.count < 5
+              ? '🟡 Moderate unfound potential'
+              : '🔴 Established find hotspot');
+        return '<b>Discovery Gap</b>' +
+               '<br>─────────────────────' +
+               '<br><b>Cell:</b> ' + Number(d.lat).toFixed(1) + '°, '
+                                   + Number(d.lon).toFixed(1) + '°' +
+               '<br><b>Finds in 1° cell:</b> ' + d.count +
+               '<br>' + gap;
+      });
+      return {
+        type: 'scattergeo',
+        lat: LANDING.map(p => p.lat),
+        lon: LANDING.map(p => p.lon),
+        mode: 'markers',
+        marker: {
+          size: 10, opacity: 0.45,
+          color: LANDING.map(p => p.density),
+          colorscale: [
+            [0.00, '#15803d'], [0.05, '#65a30d'],
+            [0.18, '#facc15'], [0.40, '#f97316'],
+            [0.70, '#dc2626'], [1.00, '#7f1d1d'],
+          ],
+          cmin: 0, cmax: LANDING_CMAX,
+          showscale: false,
+          line: { width: 0 },
+        },
+        text: text, hoverinfo: 'text',
+        hoverlabel: {
+          bgcolor: '#1e1e3a', bordercolor: '#10b981', align: 'left',
+          font: { family: 'Inter, sans-serif', size: 13, color: '#e2e8f0' },
+        },
+        name: 'Discovery Gap',
+      };
+    }
+
+    function renderMapC() {
+      Plotly.react('map-c', [
+        buildAridityHeatmap(),
+        buildDiscoveryGapOverlay(),
+        buildBorderOverlay({ color: 'rgba(15,15,15,0.7)', width: 0.6 }),
+      ], SHARED_LAYOUT, PLOT_CONFIG);
+    }
+
+    // ---- Lazy render: only when each map enters the viewport ---------
+    const RENDERERS = {
+      'map-a-placeholder': renderMapA,
+      'map-b-placeholder': () => renderMapB(currentMetricB),
+      'map-c-placeholder': renderMapC,
+    };
+    const rendered = new Set();
+    const mapIO = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting && !rendered.has(e.target.id)) {
+          rendered.add(e.target.id);
+          (RENDERERS[e.target.id] || (() => {}))();
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    Object.keys(RENDERERS).forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) mapIO.observe(el);
+    });
+
+    // ---- Section-2 metric toggle -------------------------------------
+    document.querySelectorAll('#map-b-placeholder .metric-btn').forEach((btn) => {
+      btn.addEventListener('click', () => renderMapB(btn.dataset.metric));
+    });
+
+    // ---- Resize Plotly canvases on window resize ---------------------
+    window.addEventListener('resize', () => {
+      ['map-a', 'map-b', 'map-c'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && el.data) Plotly.Plots.resize(el);
+      });
+    });
   </script>
 
 </body>
