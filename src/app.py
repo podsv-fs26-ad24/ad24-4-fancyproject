@@ -24,7 +24,7 @@ from threading import Timer
 import numpy as np
 import pandas as pd
 from flask import Flask, render_template
-from scipy.ndimage import gaussian_filter, label as ndi_label
+from scipy.ndimage import gaussian_filter, label as ndi_label, binary_erosion
 
 # ---------------------------------------------------------------------------
 # Config – paths resolved from this file so the app runs from any CWD
@@ -49,33 +49,47 @@ app = Flask(__name__, template_folder=str(TEMPLATES_DIR))
 def index():
     df = pd.read_csv(MASTER_CSV)
 
-    # ----- Aridity land grid (Section 3 base layer) --------------------
-    # Drop ocean / no-data pixels (encoded as 0) AND remove isolated
-    # speckles via connected-component labelling on a 1° land mask.
-    grid = []
+    # ----- Single filtered land grid (re-used everywhere) -------------
+    # Read the raster ONCE, then apply three filters in sequence so the
+    # display, the density grid and the treasure-zone calculation all
+    # share exactly the same set of "real land" cells:
+    #   1. drop ocean / no-data pixels (aridity_index == 0)
+    #   2. drop tiny isolated land components (single-pixel specks,
+    #      stray islands) via connected-component labelling on a 1° mask
+    #   3. binary_erosion by 1 pixel → drop the outermost coastal ring.
+    #      The source raster averages every pixel that touches water,
+    #      so coastal cells carry artificially low aridity values that
+    #      otherwise paint every continent's edge in fake hyper-arid red
+    #      AND bias the treasure-zone calculation toward the coast.
+    land_grid = pd.DataFrame()
     if os.path.exists(ARIDITY_GRID_CSV):
-        gdf = pd.read_csv(ARIDITY_GRID_CSV)
-        gdf = gdf[gdf['aridity_index'] > 0]
+        raw = pd.read_csv(ARIDITY_GRID_CSV)
+        raw = raw[raw['aridity_index'] > 0]
 
         MIN_BIN_COMPONENT = 4
-        g_lat_bin = np.clip(np.floor(gdf['lat']).astype(int) + 90, 0, 179)
-        g_lon_bin = np.clip(np.floor(gdf['lon']).astype(int) + 180, 0, 359)
-        land_mask = np.zeros((180, 360), dtype=np.int8)
-        land_mask[g_lat_bin.values, g_lon_bin.values] = 1
+        g_lat = np.clip(np.floor(raw['lat']).astype(int) + 90, 0, 179)
+        g_lon = np.clip(np.floor(raw['lon']).astype(int) + 180, 0, 359)
+        land_mask = np.zeros((180, 360), dtype=bool)
+        land_mask[g_lat.values, g_lon.values] = True
+
         labels, _ = ndi_label(land_mask)
         sizes = np.bincount(labels.ravel())
         keep_label = sizes >= MIN_BIN_COMPONENT
         keep_label[0] = False
         keep_bin = keep_label[labels]
-        gdf = gdf[keep_bin[g_lat_bin.values, g_lon_bin.values]]
+        # Coastal ring removal (1° erosion).
+        keep_bin = keep_bin & binary_erosion(keep_bin, iterations=1)
 
-        grid = gdf.to_dict(orient='records')
+        land_grid = raw[keep_bin[g_lat.values, g_lon.values]].copy()
+
+    grid = land_grid.to_dict(orient='records') if len(land_grid) else []
 
     # ----- Meteorite finds (Sections 1 & 2 dots, Section 3 density) ----
     points = []
     landing_density = []
+    treasure_zones = []
     landing_cmax = 1.0
-    if os.path.exists(METEORITES_CSV) and os.path.exists(ARIDITY_GRID_CSV):
+    if os.path.exists(METEORITES_CSV) and len(land_grid):
         mdf = pd.read_csv(
             METEORITES_CSV, usecols=['reclat', 'reclong']
         ).dropna()
@@ -95,8 +109,10 @@ def index():
         np.add.at(counts, (lat_idx.values, lon_idx.values), 1.0)
         blurred = gaussian_filter(counts, sigma=2.5, mode='constant')
 
-        land = pd.read_csv(ARIDITY_GRID_CSV)
-        land = land[land['aridity_index'] > 0].copy()
+        # Re-use the filtered land grid – inherits the coastal + speckle
+        # filter, so neither density nor treasure zones can sit on a
+        # bogus coastal pixel.
+        land = land_grid.copy()
         li = np.clip(np.floor(land['lat']).astype(int) + 90, 0, 179)
         lj = np.clip(np.floor(land['lon']).astype(int) + 180, 0, 359)
         land['count'] = counts[li, lj].astype(int)
@@ -114,6 +130,24 @@ def index():
                 .to_dict(orient='records')
         )
 
+        # ----- Section 3 "Treasure Zones" -----------------------------
+        # Cells that satisfy BOTH scientific criteria for an unexploited
+        # meteorite-hunting ground.
+        #   1. Aridity Index < 0.1   → hyper-arid / arid; iron-nickel
+        #      meteorites are preserved for millennia, virtually no rust.
+        #   2. Smoothed find count < 0.8 → essentially untouched by
+        #      systematic discovery, even after Gaussian smoothing across
+        #      the neighbouring cells.
+        treasure_df = land[
+            (land['aridity_index'] < 0.1) & (land['smoothed'] < 0.8)
+        ].copy()
+        treasure_zones = (
+            treasure_df[['lat', 'lon', 'aridity_index', 'count', 'smoothed']]
+                .round({'lat': 3, 'lon': 3,
+                        'aridity_index': 4, 'smoothed': 3})
+                .to_dict(orient='records')
+        )
+
     return render_template(
         'index.html',
         n_countries=len(df),
@@ -122,6 +156,8 @@ def index():
         grid_json=json.dumps(grid),
         points_json=json.dumps(points),
         landing_density_json=json.dumps(landing_density),
+        treasure_zones_json=json.dumps(treasure_zones),
+        n_treasure=len(treasure_zones),
         landing_cmax=landing_cmax,
     )
 
