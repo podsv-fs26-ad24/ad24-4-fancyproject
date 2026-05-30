@@ -1,0 +1,7 @@
+# Build-time deps for the static-HTML rendering of src/app.py.
+# No server runtime needed (no gunicorn) – we only invoke Flask's test
+# client once to capture the rendered response body.
+flask>=3.0,<4.0
+pandas>=2.2,<3.0
+numpy>=1.26,<3.0
+scipy>=1.11,<2.0
