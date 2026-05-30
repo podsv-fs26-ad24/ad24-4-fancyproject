@@ -21,7 +21,7 @@ from threading import Timer
 import numpy as np
 import pandas as pd
 from flask import Flask, render_template_string
-from scipy.ndimage import gaussian_filter
+from scipy.ndimage import gaussian_filter, label as ndi_label
 
 # ---------------------------------------------------------------------------
 # Config – paths resolved from this file so the app runs from any CWD
@@ -133,7 +133,6 @@ HTML_TEMPLATE = r"""
     <label for="metric">Colour by:</label>
     <select id="metric">
       <option value="aridity_heatmap">Aridity Index (Heatmap)</option>
-      <option value="aridity_index">Aridity Index (Country avg)</option>
       <option value="population_density_2022">Population Density (2022)</option>
       <option value="gdp_per_capita_2024">GDP per Capita (2024)</option>
       <option value="meteorite_landings">Meteorite Discovery Gap (Heatmap)</option>
@@ -173,17 +172,23 @@ HTML_TEMPLATE = r"""
     const GEO_LAYOUT = {
       showframe:      false,
       showcoastlines: true,
-      coastlinecolor: '#334155',
+      coastlinecolor: '#94a3b8',
+      coastlinewidth: 0.8,
       showland:       true,
       landcolor:      '#1e1e3a',
       showocean:      true,
       oceancolor:     '#0f0f1a',
       showcountries:  true,
-      countrycolor:   '#334155',
+      countrycolor:   '#94a3b8',
+      countrywidth:   0.7,
       showlakes:      true,
       lakecolor:      '#0f0f1a',
       projection:     { type: 'natural earth' },
       bgcolor:        '#0f0f1a',
+      // Crop the viewport: chop off Antarctica at the bottom and the
+      // empty polar cap at the top so the map's visual balance isn't
+      // dragged down by a huge white/red block at the south pole.
+      lataxis:        { range: [-60, 85] },
     };
 
     function fmtNum(v, decimals) {
@@ -192,6 +197,24 @@ HTML_TEMPLATE = r"""
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals
       });
+    }
+
+    // Plotly draws geo base layers (country / coastline) *below* every
+    // trace. To put country borders ON TOP of a scattergeo layer (so they
+    // don't disappear under translucent heatmap markers), we add a second
+    // trace at the end: a fully transparent choropleth whose only visible
+    // feature is its country outlines. Trace order = z-order, so this one
+    // renders above the markers.
+    function buildBorderOverlay() {
+      return {
+        type:        'choropleth',
+        locations:   DATA.map(d => d.country_code),
+        z:           DATA.map(() => 0),
+        colorscale:  [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0)']],
+        showscale:   false,
+        hoverinfo:   'skip',
+        marker:      { line: { color: '#cbd5e1', width: 0.8 } },
+      };
     }
 
     function buildHoverText(d) {
@@ -215,13 +238,33 @@ HTML_TEMPLATE = r"""
         mode: 'markers',
         marker: {
           size:        4,
-          opacity:     0.7,
+          opacity:     0.9,
           color:       GRID.map(p => p.aridity_index),
-          colorscale:  'YlGnBu',
+          // Discrete UNEP/CGIAR aridity classes – duplicate stops at every
+          // boundary produce hard banded transitions (no soft gradient).
+          // Boundaries on the normalised [cmin=0, cmax=2.5] scale:
+          //   AI 0.03 → 0.012   |  AI 0.20 → 0.080
+          //   AI 0.50 → 0.200   |  AI 0.65 → 0.260
+          //   AI 1.50 → 0.600   |  AI 2.50 → 1.000
+          colorscale: [
+            [0.000, '#7A1F1D'], [0.012, '#7A1F1D'],   // Hyper-arid (< 0.03)
+            [0.012, '#D94E14'], [0.080, '#D94E14'],   // Arid       (0.03 – 0.20)
+            [0.080, '#F2A134'], [0.200, '#F2A134'],   // Semi-arid  (0.20 – 0.50)
+            [0.200, '#E6D854'], [0.260, '#E6D854'],   // Sub-humid  (0.50 – 0.65)
+            [0.260, '#70A945'], [0.600, '#70A945'],   // Humid      (0.65 – 1.50)
+            [0.600, '#1E5624'], [1.000, '#1E5624'],   // Hyper-humid (≥ 1.50)
+          ],
           cmin:        0,
           cmax:        2.5,
           colorbar: {
-            title: { text: 'Aridity Index', font: { color: '#94a3b8', size: 12 } },
+            title: { text: 'Aridity class', font: { color: '#94a3b8', size: 12 } },
+            // Tick at the centre of each band, labelled with the class name.
+            tickmode:    'array',
+            tickvals:    [0.015, 0.115, 0.35, 0.575, 1.075, 2.0],
+            ticktext:    [
+              'Hyper-arid', 'Arid', 'Semi-arid',
+              'Sub-humid',  'Humid', 'Hyper-humid',
+            ],
             tickfont:    { color: '#94a3b8' },
             bgcolor:     '#131325',
             bordercolor: '#334155',
@@ -249,7 +292,14 @@ HTML_TEMPLATE = r"""
         height:         window.innerHeight - 160,
       };
 
-      Plotly.react('map', [trace], layout, { responsive: true });
+      // Country borders stay hair-thin so they don't dominate the
+      // discrete colour bands – very transparent dark grey, only for
+      // this layer.
+      const subtleBorders = {
+        ...buildBorderOverlay(),
+        marker: { line: { color: 'rgba(30,30,30,0.45)', width: 0.25 } },
+      };
+      Plotly.react('map', [trace, subtleBorders], layout, { responsive: true });
     }
 
     // --- Country-level choropleth ---
@@ -323,12 +373,12 @@ HTML_TEMPLATE = r"""
         lon:  LANDING.map(p => p.lon),
         mode: 'markers',
         marker: {
-          // Large, soft circles painted on top of a Gaussian-blurred density
-          // field (smoothing happens server-side). Big translucent dots blend
-          // into a continuous heatmap surface with bloom around hot cells –
-          // no visible squares, just a smooth gradient.
-          size:        14,
-          opacity:     0.55,
+          // Soft circles painted on top of a Gaussian-blurred density field
+          // (smoothing happens server-side). Markers are translucent enough
+          // that the country borders below keep showing through even when
+          // the map is zoomed out and adjacent land cells overlap heavily.
+          size:        4,
+          opacity:     0.6,
           color:       LANDING.map(p => p.density),
           // Aggressive multi-stop ramp:
           //  - Zero / near-zero cells stay deep, saturated green so the
@@ -373,7 +423,7 @@ HTML_TEMPLATE = r"""
         height:         window.innerHeight - 160,
       };
 
-      Plotly.react('map', [trace], layout, { responsive: true });
+      Plotly.react('map', [trace, buildBorderOverlay()], layout, { responsive: true });
     }
 
     // --- Render dispatcher ---
@@ -412,10 +462,33 @@ HTML_TEMPLATE = r"""
 def index():
     df = pd.read_csv(MASTER_CSV)
 
-    # Load aridity grid (if available)
+    # Load aridity grid (if available). Drop ocean / no-data pixels
+    # (encoded as 0) the same way the meteorite-density layer does, so
+    # the aridity heatmap is rendered on land only.
+    #
+    # Additionally, filter out tiny isolated land "speckles" – single
+    # pixels or two-pixel groups that show up on small islands or as
+    # mis-classified coastal points and would otherwise paint stark
+    # hyper-arid dots in the middle of the ocean. We bin the land pixels
+    # into a 1° land mask, label connected components, and discard
+    # everything below MIN_BIN_COMPONENT contiguous bins (~50,000 km²).
     grid = []
     if os.path.exists(ARIDITY_GRID_CSV):
         gdf = pd.read_csv(ARIDITY_GRID_CSV)
+        gdf = gdf[gdf['aridity_index'] > 0]
+
+        MIN_BIN_COMPONENT = 4
+        g_lat_bin = np.clip(np.floor(gdf['lat']).astype(int) + 90, 0, 179)
+        g_lon_bin = np.clip(np.floor(gdf['lon']).astype(int) + 180, 0, 359)
+        land_mask = np.zeros((180, 360), dtype=np.int8)
+        land_mask[g_lat_bin.values, g_lon_bin.values] = 1
+        labels, _ = ndi_label(land_mask)
+        sizes = np.bincount(labels.ravel())
+        keep_label = sizes >= MIN_BIN_COMPONENT
+        keep_label[0] = False   # label 0 = background / ocean
+        keep_bin = keep_label[labels]
+        gdf = gdf[keep_bin[g_lat_bin.values, g_lon_bin.values]]
+
         grid = gdf.to_dict(orient='records')
 
     # Land-only meteorite *find density* heatmap.
