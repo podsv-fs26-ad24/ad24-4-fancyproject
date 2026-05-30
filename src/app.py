@@ -38,6 +38,7 @@ METEORITES_CSV = str(
     ROOT / 'output_data'
     / 'Meteorite_Landings_NASA_sanitized_clean_coordinates.csv'
 )
+PRICES_CSV = str(ROOT / 'data_sanitized' / 'meteorite_prices_sanitized.csv')
 
 app = Flask(__name__, template_folder=str(TEMPLATES_DIR))
 
@@ -148,6 +149,41 @@ def index():
                 .to_dict(orient='records')
         )
 
+    # ----- Price calculator (epilog) ----------------------------------
+    # Same logic as src/helpers/predict_meteorite_prices.py: build a
+    # per-category median price-per-gram model from the sanitised
+    # scraped catalogue, then expose three artefacts to the frontend:
+    #   - prices_listings: ~250 catalogue entries for the name dropdown
+    #   - price_model:     {category → median $/g}
+    #   - categories:      sorted list of categories with price data
+    prices_listings = []
+    price_model = {}
+    categories = []
+    if os.path.exists(PRICES_CSV):
+        pdf = pd.read_csv(PRICES_CSV, sep=';')
+        valid = pdf.dropna(subset=['price', 'mass', 'category'])
+        valid = valid[
+            (valid['price'] > 0)
+            & (valid['mass'] > 0)
+            & (valid['category'] != 'Unknown')
+        ].copy()
+
+        prices_listings = (
+            valid[['name', 'category', 'mass', 'price']]
+                .round({'mass': 2, 'price': 2})
+                .sort_values('name')
+                .to_dict(orient='records')
+        )
+
+        valid['ppg'] = valid['price'] / valid['mass']
+        price_model = (
+            valid.groupby('category')['ppg']
+                 .median()
+                 .round(3)
+                 .to_dict()
+        )
+        categories = sorted(price_model.keys())
+
     return render_template(
         'index.html',
         n_countries=len(df),
@@ -159,6 +195,9 @@ def index():
         treasure_zones_json=json.dumps(treasure_zones),
         n_treasure=len(treasure_zones),
         landing_cmax=landing_cmax,
+        prices_listings_json=json.dumps(prices_listings),
+        price_model_json=json.dumps(price_model),
+        categories_json=json.dumps(categories),
     )
 
 

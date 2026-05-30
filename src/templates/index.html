@@ -388,6 +388,194 @@
       height: 488px;
     }
 
+    /* ===== Price calculator (epilog section) ========================= */
+    .act-calc .act-number {
+      background: var(--peach);
+      font-family: var(--sans);
+      font-size: 1.05rem;
+    }
+    .calc {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: clamp(1.4rem, 3vw, 2.2rem);
+      box-shadow: 0 2px 4px rgba(47, 49, 66, 0.04),
+                  0 16px 40px rgba(47, 49, 66, 0.06);
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .calc-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .calc-field select,
+    .calc-field input {
+      font-family: var(--sans);
+      font-size: 1rem;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      color: var(--ink);
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .calc-field select:hover,
+    .calc-field input:hover {
+      border-color: var(--peach);
+    }
+    .calc-field select:focus,
+    .calc-field input:focus {
+      outline: none;
+      border-color: var(--peach);
+      box-shadow: 0 0 0 3px rgba(232, 169, 140, 0.25);
+    }
+    .calc-hint {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .calc-button {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, var(--peach), var(--rose));
+      border: none;
+      padding: 0.85rem 1.8rem;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(232, 169, 140, 0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .calc-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(232, 169, 140, 0.5);
+    }
+    .calc-button:active { transform: translateY(0); }
+    .calc-button:focus-visible {
+      outline: 3px solid rgba(139, 128, 214, 0.45);
+      outline-offset: 2px;
+    }
+    .calc-result {
+      margin-top: 1.5rem;
+      padding: 1.6rem 1.4rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg,
+                                  var(--peach-50) 0%,
+                                  var(--lavender-50) 100%);
+      border: 1px solid var(--line);
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .calc-result-empty {
+      color: var(--ink-soft);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+    .calc-result-error {
+      color: #9f3a16;
+      font-weight: 500;
+    }
+    .calc-price {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+    .calc-breakdown {
+      font-size: 0.98rem;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .calc-meta {
+      display: block;
+      margin-top: 0.4rem;
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+    }
+    .calc-meta em { font-style: normal; font-weight: 600; color: var(--ink); }
+
+    /* ===== Data Explorer (epilog 2 – fully zoomable, 4 layers) ======= */
+    .act-explore .act-number {
+      background: var(--lavender);
+      font-family: var(--sans);
+      font-size: 1.3rem;
+    }
+    .explore-card {
+      background: var(--map-bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(47, 49, 66, 0.04),
+                  0 16px 40px rgba(47, 49, 66, 0.06);
+    }
+    .explore-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(15, 15, 26, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+    }
+    .explore-label {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--map-fg-soft, #94a3b8);
+    }
+    .explore-select {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--map-fg, #e2e8f0);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 0.5rem 0.95rem;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .explore-select:hover {
+      border-color: var(--blue);
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .explore-select:focus {
+      outline: none;
+      border-color: var(--lavender);
+      box-shadow: 0 0 0 3px rgba(139, 128, 214, 0.25);
+    }
+    .explore-hint {
+      margin-left: auto;
+      font-size: 0.72rem;
+      color: rgba(226, 232, 240, 0.55);
+      font-style: italic;
+    }
+    .explore-canvas {
+      width: 100%;
+      height: 620px;
+    }
+
     /* Sticky progress bar */
     .progress {
       position: fixed;
@@ -574,6 +762,97 @@
           Dass diese Karte überhaupt so eindeutig lesbar ist, ist die schönste Bestätigung der ursprünglichen These aus Akt I: Meteoriten fallen <em>überall gleich</em>. Wir sehen sie nur dort nicht, wo niemand hinschaut.
         </p>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ EPILOG: Preisrechner =============== -->
+  <section class="act act-calc" id="act-calc">
+    <div class="wrap">
+
+      <div class="act-header reveal">
+        <div class="act-number">€</div>
+        <div>
+          <div class="act-eyebrow">Epilog · Interaktiv</div>
+          <h2 class="act-title">Was wäre dein Meteorit wert?</h2>
+        </div>
+      </div>
+
+      <p class="lead-in reveal" style="max-width: 60ch; margin-bottom: 2rem;">
+        Wähle ein bekanntes Stück aus dem Sammler-Katalog oder gib eigene Werte ein.
+        Wir berechnen mit dem in Akt II beschriebenen <strong>Median-Preis-pro-Gramm-Modell</strong>
+        pro Meteoriten-Klasse, was dein Stein auf dem Sammlermarkt ungefähr wert wäre.
+      </p>
+
+      <div class="calc reveal">
+        <div class="calc-grid">
+          <label class="calc-field">
+            <span class="calc-label">Meteorit (optional)</span>
+            <select id="calc-name">
+              <option value="">— Eigenes Stück eingeben —</option>
+            </select>
+            <span class="calc-hint">Wählen, um Klasse und Masse automatisch zu füllen.</span>
+          </label>
+
+          <label class="calc-field">
+            <span class="calc-label">Masse in Gramm</span>
+            <input type="number" id="calc-mass" min="0" step="0.01" placeholder="z. B. 25.5">
+            <span class="calc-hint">Wieviel wiegt dein Stein?</span>
+          </label>
+
+          <label class="calc-field">
+            <span class="calc-label">Meteoriten-Klasse</span>
+            <select id="calc-category">
+              <option value="">— Klasse wählen —</option>
+            </select>
+            <span class="calc-hint">recclass-Bezeichnung gemäss NASA-Katalog.</span>
+          </label>
+        </div>
+
+        <button class="calc-button" id="calc-button" type="button">
+          Preis berechnen
+        </button>
+
+        <div class="calc-result" id="calc-result" aria-live="polite">
+          <span class="calc-result-empty">
+            Felder ausfüllen und Button drücken — die Schätzung erscheint hier.
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ EPILOG: Daten-Explorer ============= -->
+  <section class="act act-explore" id="act-explore">
+    <div class="wrap">
+
+      <div class="act-header reveal">
+        <div class="act-number">⌖</div>
+        <div>
+          <div class="act-eyebrow">Bonus · Daten-Explorer</div>
+          <h2 class="act-title">Erkunde die Daten selbst</h2>
+        </div>
+      </div>
+
+      <p class="lead-in reveal" style="max-width: 60ch; margin-bottom: 1.5rem;">
+        Alle vier Datenebenen aus der Story in einer einzigen, voll
+        interaktiven Karte. Wähle eine Schicht aus dem Dropdown — die
+        Karte lässt sich ziehen, per Mausrad zoomen, und für jedes Land
+        oder jede Zelle öffnen sich Detail-Tooltips.
+      </p>
+
+      <div class="explore-card reveal">
+        <div class="explore-toolbar">
+          <label for="explore-metric" class="explore-label">Datenebene:</label>
+          <select id="explore-metric" class="explore-select">
+            <option value="aridity">Aridity Index (Heatmap)</option>
+            <option value="pop">Population Density (2022)</option>
+            <option value="gdp">GDP per Capita (2024)</option>
+            <option value="gap">Meteorite Discovery Gap</option>
+          </select>
+          <span class="explore-hint">Mausrad zoomt · Ziehen verschiebt · Doppelklick setzt zurück</span>
+        </div>
+        <div class="explore-canvas" id="map-explore"></div>
       </div>
     </div>
   </section>
@@ -1024,6 +1303,186 @@
         const el = document.getElementById(id);
         if (el && el.data) Plotly.Plots.resize(el);
       });
+    });
+  </script>
+
+  <!-- ================================================================
+       Price calculator – pure DOM, no Plotly. Uses the same model as
+       src/helpers/predict_meteorite_prices.py: predicted price =
+       mass × median price-per-gram for the chosen recclass.
+       ================================================================ -->
+  <script>
+    const PRICES_LISTINGS = {{ prices_listings_json|safe }};
+    const PRICE_MODEL     = {{ price_model_json|safe }};
+    const CATEGORIES      = {{ categories_json|safe }};
+
+    const nameSel = document.getElementById('calc-name');
+    const catSel  = document.getElementById('calc-category');
+    const massEl  = document.getElementById('calc-mass');
+    const btnEl   = document.getElementById('calc-button');
+    const resEl   = document.getElementById('calc-result');
+
+    // ---- Populate dropdowns -----------------------------------------
+    PRICES_LISTINGS.forEach((p, i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = p.name;
+      nameSel.appendChild(opt);
+    });
+    CATEGORIES.forEach((c) => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      catSel.appendChild(opt);
+    });
+
+    // ---- Selecting a listing auto-fills category & mass -------------
+    nameSel.addEventListener('change', () => {
+      if (nameSel.value === '') return;
+      const p = PRICES_LISTINGS[parseInt(nameSel.value, 10)];
+      if (!p) return;
+      massEl.value = p.mass;
+      catSel.value = p.category;
+    });
+
+    // ---- Number formatters ------------------------------------------
+    const fmtUsd = (v) => v.toLocaleString('de-CH', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2,
+    });
+    const fmtG = (v) => v.toLocaleString('de-CH', {
+      maximumFractionDigits: 2,
+    });
+
+    // ---- Calculate ---------------------------------------------------
+    function calculate() {
+      const mass = parseFloat(massEl.value);
+      const cat  = catSel.value;
+
+      if (!cat) {
+        resEl.innerHTML =
+          '<span class="calc-result-error">Bitte eine Meteoriten-Klasse wählen.</span>';
+        return;
+      }
+      if (isNaN(mass) || mass <= 0) {
+        resEl.innerHTML =
+          '<span class="calc-result-error">Bitte eine gültige Masse (&gt; 0 g) eingeben.</span>';
+        return;
+      }
+      const ppg = PRICE_MODEL[cat];
+      if (ppg == null) {
+        resEl.innerHTML =
+          '<span class="calc-result-error">Für die Klasse <em>' + cat +
+          '</em> liegen leider keine Preisdaten im Katalog vor.</span>';
+        return;
+      }
+      const price = mass * ppg;
+      resEl.innerHTML =
+        '<div class="calc-price">$ ' + fmtUsd(price) + '</div>' +
+        '<div class="calc-breakdown">' +
+          '<b>' + fmtG(mass) + ' g</b> &nbsp;×&nbsp; <b>$ ' +
+          ppg.toFixed(2) + ' / g</b>' +
+          '<span class="calc-meta">' +
+            'Median-Preis pro Gramm der Klasse <em>' + cat + '</em>, ' +
+            'abgeleitet aus dem sanitisierten Sammler-Katalog' +
+          '</span>' +
+        '</div>';
+    }
+    btnEl.addEventListener('click', calculate);
+
+    // Enter inside the mass field also triggers the calculation.
+    massEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); calculate(); }
+    });
+  </script>
+
+  <!-- ================================================================
+       Data Explorer — fully interactive variant of all four maps from
+       src/visualize_master_data.py. Unlike the scrolly maps above this
+       one keeps scroll-zoom + drag-pan + double-click-reset enabled and
+       shows the Plotly modebar so users can compare layers freely. All
+       data and build* helpers are inherited from the scrolly script
+       block (top-level const declarations share script scope across
+       <script> tags).
+       ================================================================ -->
+  <script>
+    // Independent config: zoom + pan + reset enabled.
+    const EXPLORE_CONFIG = {
+      responsive:             true,
+      displayModeBar:         true,
+      scrollZoom:             true,
+      doubleClick:            'reset',
+      showTips:               false,
+      displaylogo:            false,
+      modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+    };
+
+    // Re-use the shared GEO_LAYOUT but override margin/autosize.
+    const EXPLORE_LAYOUT = {
+      geo:           GEO_LAYOUT,
+      paper_bgcolor: '#0f0f1a',
+      plot_bgcolor:  '#0f0f1a',
+      font:          { family: 'Inter, sans-serif', color: '#e2e8f0' },
+      margin:        { l: 0, r: 0, t: 0, b: 0 },
+      autosize:      true,
+    };
+
+    // Discovery Gap as a STANDALONE layer (the scrolly version hides
+    // its colorbar because it's overlaid on aridity; here we want it).
+    function buildDiscoveryGapStandalone() {
+      const trace = buildDiscoveryGapOverlay();
+      trace.marker.size = 8;
+      trace.marker.opacity = 0.75;
+      trace.marker.showscale = true;
+      trace.marker.colorbar = {
+        title:    { text: 'Funde (log)', font: { color: '#94a3b8', size: 12 } },
+        tickfont: { color: '#94a3b8' },
+        bgcolor:  '#131325',
+        bordercolor: '#334155',
+        len: 0.55, x: 0.99,
+      };
+      return trace;
+    }
+
+    function renderExplore(metric) {
+      let traces;
+      if (metric === 'aridity') {
+        traces = [buildAridityHeatmap(), buildBorderOverlay()];
+      } else if (metric === 'pop') {
+        traces = [buildChoroplethTrace('population_density_2022')];
+      } else if (metric === 'gdp') {
+        traces = [buildChoroplethTrace('gdp_per_capita_2024')];
+      } else if (metric === 'gap') {
+        traces = [
+          buildDiscoveryGapStandalone(),
+          buildBorderOverlay({ color: 'rgba(255,255,255,0.20)', width: 0.5 }),
+        ];
+      } else {
+        return;
+      }
+      Plotly.react('map-explore', traces, EXPLORE_LAYOUT, EXPLORE_CONFIG);
+    }
+
+    // Dropdown switch.
+    document.getElementById('explore-metric').addEventListener('change', (e) => {
+      renderExplore(e.target.value);
+    });
+
+    // Lazy mount: only render once the explorer scrolls into view, then
+    // keep it alive (this map is meant for sustained exploration).
+    const exploreIO = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          exploreIO.disconnect();
+          renderExplore(document.getElementById('explore-metric').value);
+        }
+      });
+    }, { rootMargin: '200px 0px', threshold: 0.05 });
+    exploreIO.observe(document.getElementById('map-explore'));
+
+    // Keep the canvas in shape on window resize.
+    window.addEventListener('resize', () => {
+      const el = document.getElementById('map-explore');
+      if (el && el.data) Plotly.Plots.resize(el);
     });
   </script>
 
