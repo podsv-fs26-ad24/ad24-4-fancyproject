@@ -1,35 +1,19 @@
-# The Meteorite Illusion: Exposing Human Bias in the Search for Cosmic Treasure
+# Meteorites on Earth
 
-A data visualization project using Python, uv for environment and package management and Quarto for documentation.
+A data visualization project that deconstructs the "meteorite discovery gap": the map of found meteorites is really a map of human activity, not cosmic bombardment. Built with Python, Flask, Plotly.js and Quarto.
 
-To adapt to your individual project change `sample` to the respective project name in the commands below
-
-Adapt the `LICENSE` as required.
-
-This project explores global meteorite landings together with environmental and economic context per country. The NASA meteorite landings dataset is sanitised and enriched with estimated market prices (scraped from an online meteorite retailer), then combined with the CGIAR Global Aridity Index, World Bank population density, GDP per capita and income class. The results are presented as an interactive Plotly world map – a country-level choropleth plus a pixel-level aridity heatmap – served by a small Flask web app.
+The project combines NASA meteorite landings data with environmental and economic context (CGIAR Global Aridity Index, World Bank population density, GDP per capita). Meteorite prices are scraped from an online retailer and used to build a per class price estimator. The final product is a scrollytelling web app served by Flask, deployed as a static page alongside a Quarto documentation site on GitHub Pages.
 
 ## Project Organisation
-The visualization product development is organised according to the following process model:
 
 ![The visualization product development process](docs/pics/vizproductprocess.png)
 
-Code and configurations used in the different project phases are stored in the correspoding subfolders. Documentation artefacts in the form of a Quarto project are provided in `docs`.
+Code and configurations used in the different project phases are stored in the corresponding subfolders. Documentation artefacts in the form of a Quarto project are provided in `docs`.
 
-| Phase | Code folders | Documentation section | `docs`-File |
-|:-------|:---|:---|:---|
-| Project Understanding | -  | Project Charta | project_charta.qmd  |
-| Data Acquisition and Exploration | `eda` | Data Report | data_report.qmd  |
-| Visual Encoding and Design | `encoding-design`  | Visual Encoding and Design | viz_encoding_design.qmd  |
-| Evaluation | `evaluation`  | Evaluation | evaluation.qmd  |
-| Deployment | `deployment` | Deployment | deplyoment.qmd |
-
-
-> To do: Adjust accoding to your specific project needs - ensure consistency with readme, documentation, etc.
-
-> To do: add link to documentation website for convenience.
-
-
-See section `Quarto Setup and Usage` for instructions on how to build and serve the documentation website using Quarto.
+| Phase | Code folders | Documentation section | `docs` file |
+|:------|:-------------|:----------------------|:------------|
+| Project Understanding | — | Project Charta | `project_charta.qmd` |
+| Data Acquisition and Exploration | `eda` | Data Report | `index.qmd` |
 
 ## Project Structure
 
@@ -51,6 +35,9 @@ See section `Quarto Setup and Usage` for instructions on how to build and serve 
 │   └── aridity_grid.csv
 ├── src/                                  Application and pipeline code
 │   ├── visualize_master_data.py            Flask + Plotly world-map web app
+│   ├── app.py                              Flask scrollytelling web app
+│   ├── templates/
+│   │   └── index.html                      Full page template (HTML + CSS + JS + Plotly)
 │   └── helpers/
 │       ├── meteorite_price_scraper.py      Scrapes meteorite prices (Playwright)
 │       ├── predict_meteorite_prices.py     Estimates a price per NASA meteorite
@@ -58,9 +45,16 @@ See section `Quarto Setup and Usage` for instructions on how to build and serve 
 │       └── sanitizers/
 │           ├── sanitizer_meteorite_landings.py
 │           └── sanitizer_meteorite_prices.py
-├── eda/                                  Exploratory data analysis
+├── deployment/                           Static build and CI helpers
+│   ├── build_static.py                    Bakes the Flask app into a static HTML page
+│   └── requirements-build.txt             Python deps for the CI build step
 ├── docs/                                 Quarto documentation project
-└── deployment/, evaluation/              Process-phase artefacts
+│   ├── _quarto.yml                        Quarto configuration
+│   ├── index.qmd                          Data Report
+│   └── project_charta.qmd                Project Charta
+├── .github/workflows/
+│   └── publish.yml                        GitHub Actions: build + deploy to Pages
+└── eda/                                  Exploratory data analysis
 ```
 
 ## Data Pipeline
@@ -68,31 +62,35 @@ See section `Quarto Setup and Usage` for instructions on how to build and serve 
 The code in `src/` produces the data in `output_data/` from the raw sources
 in `data_acquisition/` in two independent strands.
 
-**Strand A – Meteorite prices**
+**Strand A — Meteorite prices**
 
 1. `helpers/meteorite_price_scraper.py` scrapes an online retailer and writes
-   `data_acquisition/meteorite_prices.csv` (+ the source-URL list).
+   `data_acquisition/meteorite_prices.csv` (+ the source URL list).
 2. `helpers/sanitizers/sanitizer_meteorite_landings.py` cleans
    `Meteorite_Landings_NASA.csv` → `data_sanitized/Meteorite_Landings_NASA_sanitized.csv`
-   (drops unusable `recclass`, relict entries and zero-mass rows).
+   (drops unusable `recclass`, relict entries and zero mass rows).
 3. `helpers/sanitizers/sanitizer_meteorite_prices.py` cleans
    `meteorite_prices.csv` → `data_sanitized/meteorite_prices_sanitized.csv`
    (strips `$`/`g`, maps categories to valid `recclass` values).
-4. `helpers/predict_meteorite_prices.py` builds a median price-per-gram model
+4. `helpers/predict_meteorite_prices.py` builds a median price per gram model
    per category and writes
    `output_data/Meteorite_Landings_NASA_with_prices.csv`.
 
-**Strand B – Country-level master data**
+**Strand B — Country level master data**
 
 1. `helpers/aggregate_master_from_dataset.py` merges the Global Aridity Index,
    population density, income class and GDP per capita per country and writes
-   `output_data/aggregated_master_data.csv` plus a pixel-level
+   `output_data/aggregated_master_data.csv` plus a pixel level
    `output_data/aridity_grid.csv` for the heatmap.
 
-**Visualization**
+**Visualization — `src/app.py`**
 
-`visualize_master_data.py` reads `aggregated_master_data.csv` and
-`aridity_grid.csv` and serves the interactive map at `http://127.0.0.1:5000`.
+`app.py` reads all processed datasets, computes the aridity grid (with land only
+filter + connected component speckle removal + coastal erosion), the Gaussian
+blurred meteorite density grid, and the "treasure zones" (aridity < 0.1 AND find
+density < 0.8). It renders `templates/index.html` — a self contained scrollytelling
+page with three Plotly maps, an interactive price calculator, and a data explorer —
+and serves it at `http://127.0.0.1:5001`.
 
 ## Quick Start
 
@@ -101,26 +99,26 @@ Run all commands from the repository root with the project environment active
 data changes; the generated files are already provided in `output_data/`.
 
 ```bash
-# 0. one-time environment setup
+# 0. One time environment setup
 uv sync
 
-# 1. (optional) re-scrape meteorite prices  → data_acquisition/meteorite_prices.csv
+# 1. (optional) Re scrape meteorite prices  → data_acquisition/meteorite_prices.csv
 #    Only if re-scraping: install the Playwright browser binary once
 uv run playwright install chromium
 uv run python src/helpers/meteorite_price_scraper.py
 
-# 2. sanitise the raw datasets              → data_sanitized/*.csv
+# 2. Sanitise the raw datasets              → data_sanitized/*.csv
 uv run python src/helpers/sanitizers/sanitizer_meteorite_landings.py
 uv run python src/helpers/sanitizers/sanitizer_meteorite_prices.py
 
-# 3. estimate prices per meteorite          → output_data/Meteorite_Landings_NASA_with_prices.csv
+# 3. Estimate prices per meteorite          → output_data/Meteorite_Landings_NASA_with_prices.csv
 uv run python src/helpers/predict_meteorite_prices.py
 
-# 4. aggregate the country-level sources    → output_data/aggregated_master_data.csv, aridity_grid.csv
+# 4. Aggregate the country level sources    → output_data/aggregated_master_data.csv, aridity_grid.csv
 uv run python src/helpers/aggregate_master_from_dataset.py
 
-# 5. launch the interactive world map       → http://127.0.0.1:5000
-uv run python src/visualize_master_data.py
+# 5. Launch the interactive scrollytelling app → http://127.0.0.1:5001
+uv run python src/app.py
 ```
 
 | Step | Script | Input | Output |
@@ -130,12 +128,38 @@ uv run python src/visualize_master_data.py
 | 2 | `sanitizer_meteorite_prices.py` | `data_acquisition/meteorite_prices.csv` | `data_sanitized/meteorite_prices_sanitized.csv` |
 | 3 | `predict_meteorite_prices.py` | `data_sanitized/*_sanitized.csv` | `output_data/Meteorite_Landings_NASA_with_prices.csv` |
 | 4 | `aggregate_master_from_dataset.py` | aridity GeoTIFF, World Bank CSVs | `output_data/aggregated_master_data.csv`, `aridity_grid.csv` |
-| 5 | `visualize_master_data.py` | `output_data/aggregated_master_data.csv`, `aridity_grid.csv` | interactive web map |
+| 5 | `app.py` | `output_data/*`, `data_sanitized/meteorite_prices_sanitized.csv` | interactive scrollytelling web app |
+
+## How It All Works Together
+
+The project ships two web artefacts that are deployed side by side on GitHub Pages:
+
+1. **Quarto documentation** (`docs/`) — the project charta and data report, rendered to static HTML by Quarto.
+2. **Interactive scrollytelling app** (`src/app.py` + `src/templates/index.html`) — a Flask application that performs all heavy data processing server side and renders a single, fully self contained HTML page. Because the output is pure client side HTML/JS (Plotly.js + embedded JSON), it can be "baked" into a static file.
+
+The deployment glue is `deployment/build_static.py`: it imports the Flask app, fires a single request via Flask's test client, captures the rendered HTML, and writes it to `docs/build/app/index.html`. This runs automatically in CI after Quarto renders the docs, so the final GitHub Pages artefact contains both sites under one domain.
+
+The cross linking is simple: Quarto's sidebar has an "Interactive App" link pointing to `/app`, and the Flask template has a "Documentation" button linking back to `/`.
+
+### Deployment workflow (`.github/workflows/publish.yml`)
+
+Every push to `main` triggers the GitHub Actions workflow:
+
+1. **Render Quarto** → `docs/build/` (static documentation site)
+2. **Build static Flask app** → `docs/build/app/index.html` (self contained page)
+3. **Upload + deploy** → GitHub Pages serves everything under one domain
+
+```
+https://<user>.github.io/<repo>/          ← Quarto docs (index, charta, data report)
+https://<user>.github.io/<repo>/app/      ← Interactive scrollytelling app
+```
+
+No server runtime is needed in production — both are fully static.
 
 ## Python Environment Setup and Management with uv
 Make sure to have uv installed: https://docs.astral.sh/uv/getting-started/installation/
 
-After cloning the repository,  create the python environment with all dependencies based on the `.python-version`, `pyproject.toml` and `uv.lock` files by running
+After cloning the repository, create the python environment with all dependencies based on the `.python-version`, `pyproject.toml` and `uv.lock` files by running
 ```bash
 uv sync
 ```
@@ -165,29 +189,6 @@ You can also run
 source .venv/bin/activate
 ```
 to activate the project Python environment in a terminal session in order to avoid having to prefix every command.
-
-## Runtime Configuration with Environment Variables
-The environment variables are specified in a .env-File, which is never commited into version control, as it may contain secrets. The repo just contains the file `.env.template` to demonstrate how environment variables are specified.
-
-You have to create a local copy of `.env.template` in the project root folder and the easiest is to just rename it to `.env`.
-
-The content of the .env-file is then read by the pypi-dependency: `python-dotenv`. Usage:
-```python
-import os
-from dotenv import load_dotenv
-```
-
-`load_dotenv` reads the .env-file and sets the environment variables:
-
-```python
-load_dotenv()
-```
-
-which can then be accessed (assuming the file contains a line `SAMPLE_VAR=<some value>`):
-
-```python
-os.environ['SAMPLE_VAR']
-```
 
 ## Quarto Setup and Usage
 
@@ -239,3 +240,15 @@ The `_freeze` directory and the workflow file `.github/workflows/publish.yml` sh
 1. Build the website locally: `uv run quarto render` from the `docs` folder. This updates `docs/build` (gitignored) and `docs/_freeze` (checked in)
 2. Check the website locally by opening `docs/build/index.html`
 3. Commit and push all updated files (including `docs/_freeze`) to `main`. The GitHub Actions workflow will render and deploy the site automatically
+
+---
+
+## Data Sources
+
+| Dataset | Provider | License |
+|:--------|:---------|:--------|
+| NASA Meteorite Landings | NASA Open Data Portal / The Meteoritical Society | Public domain / open data |
+| Meteorite Prices | Scraped from *meteorites-for-sale.com* via `src/helpers/meteorite_price_scraper.py` (Playwright) | Public product listings |
+| GDP per Capita (constant 2015 US$) | World Bank, indicator `NY.GDP.PCAP.KD` | CC BY 4.0 |
+| Population Density | World Bank, indicator `EN.POP.DNST` | CC BY 4.0 |
+| Global Aridity Index v3 (annual) | CGIAR-CSI | Free for research use with attribution |
