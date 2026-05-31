@@ -35,7 +35,7 @@ The project team develops the product, lecturers assess its quality, and users b
 
 ## User Analysis
 
-###PERSONA 1
+PERSONA 1
 Name: Lukas (University Student)
 Age: 23
 Quote: "I need hard data to know what my find is actually worth on the market."
@@ -60,7 +60,7 @@ Pain Points:
 Key Features Used on Your Site:
 The interactive Class Calculator. He uses this tool as a quick benchmark method. He selects the visual description of his find, enters the mass, and immediately sees its statistical rarity. This helps him justify his pricing on eBay or in collector communities.
 
-###PERSONA 2
+PERSONA 2
 Name: Sarah (Fit Retiree)
 Age: 67
 Quote: "My camper, the vastness of the desert, and the chance to find a piece of the universe—that is my perfect vacation."
