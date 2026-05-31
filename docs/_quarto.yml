@@ -18,6 +18,8 @@ website:
     contents:
       - index.qmd
       - project_charta.qmd
+      - text: "Interactive App"
+        href: /app
 
 format:
   html:

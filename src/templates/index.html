@@ -333,6 +333,35 @@
       max-width: 44ch;
       margin: 0 auto;
     }
+    .outro-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.8rem;
+      flex-wrap: wrap;
+    }
+    .btn-outline {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      background: transparent;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0.6rem 1.4rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-outline:hover {
+      color: var(--lavender);
+      border-color: var(--lavender);
+      background: var(--lavender-50);
+      text-decoration: none;
+    }
 
     /* ===== Scroll-triggered reveal ===== */
     .reveal {
@@ -1141,6 +1170,9 @@
     <div class="wrap-narrow">
       <p class="closing">A map is never just what it shows. It is always also what it conceals.</p>
       <p class="footnote">PODSV FS26 · ad24-4 — Meteorites, Aridity &amp; Wealth. Data sources: NASA Meteorite Landings, CGIAR Global Aridity Index v3, World Bank (Population Density 2022, GDP per Capita 2024).</p>
+      <div class="outro-row">
+        <a href="/" class="btn-outline">← Documentation</a>
+      </div>
     </div>
   </footer>
 
