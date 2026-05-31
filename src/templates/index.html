@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,34 +8,44 @@
   <meta name="description" content="A data driven story about what found meteorites really tell us about our planet.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+    rel="stylesheet">
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
     /* ===== Pastel design tokens – consistent with the Quarto docs ===== */
     :root {
-      --paper:        #fbfaf7;
-      --paper-tint:   #f5f1ea;
-      --surface:      #ffffff;
-      --ink:          #2f3142;
-      --ink-soft:     #6a6c7d;
-      --line:         #e9e6df;
+      --paper: #fbfaf7;
+      --paper-tint: #f5f1ea;
+      --surface: #ffffff;
+      --ink: #2f3142;
+      --ink-soft: #6a6c7d;
+      --line: #e9e6df;
 
-      --lavender:     #8b80d6;
-      --lavender-50:  #ece9f8;
-      --blue:         #7fa8d9;
-      --blue-50:      #e8f0fa;
-      --mint:         #7fc8b0;
-      --mint-50:      #e6f4ee;
-      --peach:        #e8a98c;
-      --peach-50:     #fbede4;
-      --rose:         #df8fa6;
+      --lavender: #8b80d6;
+      --lavender-50: #ece9f8;
+      --blue: #7fa8d9;
+      --blue-50: #e8f0fa;
+      --mint: #7fc8b0;
+      --mint-50: #e6f4ee;
+      --peach: #e8a98c;
+      --peach-50: #fbede4;
+      --rose: #df8fa6;
 
       --serif: 'Source Serif 4', Georgia, "Times New Roman", serif;
-      --sans:  'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: var(--sans);
       background: var(--paper);
@@ -44,12 +55,29 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
     }
-    a { color: var(--lavender); text-decoration: none; }
-    a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+    a {
+      color: var(--lavender);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
 
     /* ===== Layout ===== */
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
-    .wrap-narrow { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .wrap-narrow {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
 
     /* ===== Hero ===== */
     .hero {
@@ -67,6 +95,7 @@
         var(--paper);
       position: relative;
     }
+
     .hero .eyebrow {
       font-family: var(--sans);
       font-size: 0.78rem;
@@ -76,6 +105,7 @@
       color: var(--lavender);
       margin-bottom: 1.4rem;
     }
+
     .hero h1 {
       font-family: var(--serif);
       font-size: clamp(2.4rem, 5vw, 4.2rem);
@@ -85,6 +115,7 @@
       max-width: 18ch;
       margin-bottom: 1.4rem;
     }
+
     .hero .lede {
       font-family: var(--serif);
       font-size: clamp(1.1rem, 1.6vw, 1.4rem);
@@ -94,6 +125,7 @@
       max-width: 38ch;
       line-height: 1.5;
     }
+
     .hero .scroll-hint {
       position: absolute;
       bottom: 2rem;
@@ -109,14 +141,26 @@
       gap: 0.5rem;
       animation: bob 2.6s ease-in-out infinite;
     }
+
     .hero .scroll-hint::after {
       content: "";
-      width: 1px; height: 28px;
+      width: 1px;
+      height: 28px;
       background: linear-gradient(to bottom, var(--ink-soft), transparent);
     }
+
     @keyframes bob {
-      0%, 100% { transform: translate(-50%, 0); opacity: 0.85; }
-      50%      { transform: translate(-50%, 6px); opacity: 1; }
+
+      0%,
+      100% {
+        transform: translate(-50%, 0);
+        opacity: 0.85;
+      }
+
+      50% {
+        transform: translate(-50%, 6px);
+        opacity: 1;
+      }
     }
 
     /* ===== Section ===== */
@@ -124,8 +168,14 @@
       padding: 7rem 0 5rem;
       position: relative;
     }
-    section.act + section.act { border-top: 1px solid var(--line); }
-    section.act.tinted { background: var(--paper-tint); }
+
+    section.act+section.act {
+      border-top: 1px solid var(--line);
+    }
+
+    section.act.tinted {
+      background: var(--paper-tint);
+    }
 
     .act-header {
       display: flex;
@@ -133,20 +183,33 @@
       gap: 1.4rem;
       margin-bottom: 2.5rem;
     }
+
     .act-number {
       flex: 0 0 auto;
-      width: 3.2rem; height: 3.2rem;
+      width: 3.2rem;
+      height: 3.2rem;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: var(--serif);
       font-size: 1.3rem;
       font-weight: 700;
       color: #fff;
       box-shadow: 0 6px 18px rgba(47, 49, 66, 0.18);
     }
-    .act-1 .act-number { background: var(--lavender); }
-    .act-2 .act-number { background: var(--blue); }
-    .act-3 .act-number { background: var(--mint); }
+
+    .act-1 .act-number {
+      background: var(--lavender);
+    }
+
+    .act-2 .act-number {
+      background: var(--blue);
+    }
+
+    .act-3 .act-number {
+      background: var(--mint);
+    }
 
     .act-eyebrow {
       font-size: 0.72rem;
@@ -156,6 +219,7 @@
       color: var(--ink-soft);
       margin-bottom: 0.45rem;
     }
+
     .act-title {
       font-family: var(--serif);
       font-size: clamp(1.9rem, 3.4vw, 2.7rem);
@@ -178,23 +242,27 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 2px 4px rgba(47, 49, 66, 0.04),
-                  0 16px 40px rgba(47, 49, 66, 0.06);
+        0 16px 40px rgba(47, 49, 66, 0.06);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
+
     .map-placeholder::before {
       content: "";
-      position: absolute; inset: 0;
+      position: absolute;
+      inset: 0;
       background:
         repeating-linear-gradient(45deg,
           transparent 0 22px,
           rgba(139, 128, 214, 0.04) 22px 44px);
       pointer-events: none;
     }
+
     .map-placeholder-inner {
       text-align: center;
       padding: 2rem;
       z-index: 1;
     }
+
     .map-tag {
       display: inline-block;
       font-size: 0.72rem;
@@ -207,8 +275,17 @@
       border-radius: 999px;
       margin-bottom: 1rem;
     }
-    .act-2 .map-tag { color: var(--blue); background: var(--blue-50); }
-    .act-3 .map-tag { color: var(--mint); background: var(--mint-50); }
+
+    .act-2 .map-tag {
+      color: var(--blue);
+      background: var(--blue-50);
+    }
+
+    .act-3 .map-tag {
+      color: var(--mint);
+      background: var(--mint-50);
+    }
+
     .map-headline {
       font-family: var(--serif);
       font-size: 1.25rem;
@@ -216,12 +293,14 @@
       color: var(--ink);
       margin-bottom: 0.5rem;
     }
+
     .map-hint {
       color: var(--ink-soft);
       font-size: 0.95rem;
       max-width: 42ch;
       margin: 0 auto 1.1rem;
     }
+
     .map-snippet {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 0.78rem;
@@ -240,16 +319,28 @@
       gap: 2.4rem 3rem;
       margin-top: 1rem;
     }
+
     @media (max-width: 820px) {
-      .story { grid-template-columns: 1fr; gap: 1.6rem; }
+      .story {
+        grid-template-columns: 1fr;
+        gap: 1.6rem;
+      }
     }
+
     /* Section 3 uses a single flowing column – avoids the gap the
        2-col grid would otherwise leave on the right side. */
     .story.story--single-col {
       grid-template-columns: 1fr;
     }
-    .story p { font-size: 1.05rem; }
-    .story p + p { margin-top: 1.05rem; }
+
+    .story p {
+      font-size: 1.05rem;
+    }
+
+    .story p+p {
+      margin-top: 1.05rem;
+    }
+
     .story p.lead-in {
       font-family: var(--serif);
       font-size: 1.2rem;
@@ -257,7 +348,10 @@
       color: var(--ink);
       line-height: 1.55;
     }
-    .story strong { color: var(--ink); }
+
+    .story strong {
+      color: var(--ink);
+    }
 
     .pull {
       grid-column: 1 / -1;
@@ -271,8 +365,14 @@
       margin: 1.2rem 0;
       max-width: 32ch;
     }
-    .act-2 .pull { border-color: var(--blue); }
-    .act-3 .pull { border-color: var(--mint); }
+
+    .act-2 .pull {
+      border-color: var(--blue);
+    }
+
+    .act-3 .pull {
+      border-color: var(--mint);
+    }
 
     .keypoints {
       grid-column: 1 / -1;
@@ -281,9 +381,13 @@
       gap: 1rem;
       margin-top: 1rem;
     }
+
     @media (max-width: 820px) {
-      .keypoints { grid-template-columns: 1fr; }
+      .keypoints {
+        grid-template-columns: 1fr;
+      }
     }
+
     .keypoint {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -291,6 +395,7 @@
       padding: 1.1rem 1.2rem;
       box-shadow: 0 1px 2px rgba(47, 49, 66, 0.04);
     }
+
     .keypoint-label {
       font-size: 0.72rem;
       font-weight: 700;
@@ -299,14 +404,22 @@
       color: var(--lavender);
       margin-bottom: 0.35rem;
     }
-    .act-2 .keypoint-label { color: var(--blue); }
-    .act-3 .keypoint-label { color: var(--mint); }
+
+    .act-2 .keypoint-label {
+      color: var(--blue);
+    }
+
+    .act-3 .keypoint-label {
+      color: var(--mint);
+    }
+
     .keypoint h4 {
       font-family: var(--serif);
       font-size: 1.05rem;
       font-weight: 600;
       margin-bottom: 0.3rem;
     }
+
     .keypoint p {
       font-size: 0.95rem;
       color: var(--ink-soft);
@@ -319,6 +432,7 @@
       background: linear-gradient(180deg, var(--paper) 0%, var(--paper-tint) 100%);
       border-top: 1px solid var(--line);
     }
+
     .outro .closing {
       font-family: var(--serif);
       font-size: clamp(1.5rem, 2.4vw, 2rem);
@@ -327,12 +441,14 @@
       margin: 0 auto 1rem;
       line-height: 1.35;
     }
+
     .outro .footnote {
       color: var(--ink-soft);
       font-size: 0.95rem;
       max-width: 44ch;
       margin: 0 auto;
     }
+
     .outro-row {
       display: flex;
       align-items: center;
@@ -341,6 +457,7 @@
       margin-top: 1.8rem;
       flex-wrap: wrap;
     }
+
     .btn-outline {
       font-family: var(--sans);
       font-size: 0.85rem;
@@ -356,6 +473,7 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
+
     .btn-outline:hover {
       color: var(--lavender);
       border-color: var(--lavender);
@@ -369,6 +487,7 @@
       transform: translateY(24px);
       transition: opacity 0.9s ease, transform 0.9s ease;
     }
+
     .reveal.is-visible {
       opacity: 1;
       transform: translateY(0);
@@ -383,13 +502,18 @@
       display: block;
       background: #0f0f1a;
     }
-    .map-placeholder.has-map::before { display: none; }
+
+    .map-placeholder.has-map::before {
+      display: none;
+    }
+
     .map-canvas {
       width: 100%;
       height: 540px;
       border-radius: inherit;
       overflow: hidden;
     }
+
     .map-toolbar {
       display: flex;
       justify-content: flex-end;
@@ -398,9 +522,11 @@
       background: rgba(15, 15, 26, 0.92);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .map-toolbar .metric-btn {
       font-family: var(--sans);
-      font-size: 0.78rem; font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 600;
       color: var(--map-fg-soft, #94a3b8);
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -409,15 +535,18 @@
       cursor: pointer;
       transition: background 0.18s, color 0.18s, border-color 0.18s;
     }
+
     .map-toolbar .metric-btn:hover {
       color: #e2e8f0;
       border-color: rgba(127, 168, 217, 0.45);
     }
+
     .map-toolbar .metric-btn.active {
       background: var(--blue);
       color: #fff;
       border-color: var(--blue);
     }
+
     .map-placeholder.has-map .map-canvas.with-toolbar {
       height: 488px;
     }
@@ -428,25 +557,29 @@
       font-family: var(--sans);
       font-size: 1.05rem;
     }
+
     .calc {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: clamp(1.4rem, 3vw, 2.2rem);
       box-shadow: 0 2px 4px rgba(47, 49, 66, 0.04),
-                  0 16px 40px rgba(47, 49, 66, 0.06);
+        0 16px 40px rgba(47, 49, 66, 0.06);
     }
+
     .calc-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
+
     .calc-field {
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
     }
+
     .calc-label {
       font-size: 0.72rem;
       font-weight: 700;
@@ -454,6 +587,7 @@
       text-transform: uppercase;
       color: var(--ink-soft);
     }
+
     .calc-field select,
     .calc-field input {
       font-family: var(--sans);
@@ -465,21 +599,25 @@
       color: var(--ink);
       transition: border-color 0.18s, box-shadow 0.18s;
     }
+
     .calc-field select:hover,
     .calc-field input:hover {
       border-color: var(--peach);
     }
+
     .calc-field select:focus,
     .calc-field input:focus {
       outline: none;
       border-color: var(--peach);
       box-shadow: 0 0 0 3px rgba(232, 169, 140, 0.25);
     }
+
     .calc-hint {
       font-size: 0.78rem;
       color: var(--ink-soft);
       line-height: 1.4;
     }
+
     .calc-button {
       font-family: var(--sans);
       font-size: 0.95rem;
@@ -493,22 +631,28 @@
       box-shadow: 0 4px 14px rgba(232, 169, 140, 0.4);
       transition: transform 0.15s, box-shadow 0.15s;
     }
+
     .calc-button:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(232, 169, 140, 0.5);
     }
-    .calc-button:active { transform: translateY(0); }
+
+    .calc-button:active {
+      transform: translateY(0);
+    }
+
     .calc-button:focus-visible {
       outline: 3px solid rgba(139, 128, 214, 0.45);
       outline-offset: 2px;
     }
+
     .calc-result {
       margin-top: 1.5rem;
       padding: 1.6rem 1.4rem;
       border-radius: 12px;
       background: linear-gradient(135deg,
-                                  var(--peach-50) 0%,
-                                  var(--lavender-50) 100%);
+          var(--peach-50) 0%,
+          var(--lavender-50) 100%);
       border: 1px solid var(--line);
       text-align: center;
       min-height: 120px;
@@ -517,15 +661,18 @@
       align-items: center;
       justify-content: center;
     }
+
     .calc-result-empty {
       color: var(--ink-soft);
       font-style: italic;
       font-size: 0.95rem;
     }
+
     .calc-result-error {
       color: #9f3a16;
       font-weight: 500;
     }
+
     .calc-price {
       font-family: var(--serif);
       font-size: clamp(2rem, 4vw, 2.8rem);
@@ -534,18 +681,25 @@
       letter-spacing: -0.01em;
       margin-bottom: 0.5rem;
     }
+
     .calc-breakdown {
       font-size: 0.98rem;
       color: var(--ink);
       line-height: 1.55;
     }
+
     .calc-meta {
       display: block;
       margin-top: 0.4rem;
       color: var(--ink-soft);
       font-size: 0.85rem;
     }
-    .calc-meta em { font-style: normal; font-weight: 600; color: var(--ink); }
+
+    .calc-meta em {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--ink);
+    }
 
     /* Disabled cascade state for the subclass <select>. */
     .calc-field select:disabled {
@@ -560,6 +714,7 @@
       margin-top: 3rem;
       max-width: 60ch;
     }
+
     .meteor-gallery-intro h3 {
       font-family: var(--serif);
       font-size: 1.2rem;
@@ -567,16 +722,19 @@
       color: var(--ink);
       margin-bottom: 0.4rem;
     }
+
     .meteor-gallery-intro p {
       color: var(--ink-soft);
       font-size: 0.98rem;
     }
+
     .meteor-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1rem;
       margin-top: 1.2rem;
     }
+
     .meteor-card {
       /* button reset */
       font-family: var(--sans);
@@ -592,26 +750,40 @@
       display: flex;
       flex-direction: column;
     }
+
     .meteor-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 18px 36px rgba(47, 49, 66, 0.14);
       border-color: var(--lavender);
     }
+
     .meteor-card:focus-visible {
       outline: 3px solid rgba(139, 128, 214, 0.45);
       outline-offset: 3px;
     }
-    .meteor-card:active { transform: translateY(-2px); }
+
+    .meteor-card:active {
+      transform: translateY(-2px);
+    }
 
     /* Brief "pulse" when the user clicks a card – the dropdowns update,
        and the card flashes so the user sees the connection. */
     .meteor-card.is-flashing {
       animation: cardFlash 0.7s ease;
     }
+
     @keyframes cardFlash {
-      0%   { box-shadow: 0 0 0 0 rgba(139, 128, 214, 0.55); }
-      60%  { box-shadow: 0 0 0 16px rgba(139, 128, 214, 0); }
-      100% { box-shadow: 0 18px 36px rgba(47, 49, 66, 0.14); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(139, 128, 214, 0.55);
+      }
+
+      60% {
+        box-shadow: 0 0 0 16px rgba(139, 128, 214, 0);
+      }
+
+      100% {
+        box-shadow: 0 18px 36px rgba(47, 49, 66, 0.14);
+      }
     }
 
     .meteor-card-icon {
@@ -621,12 +793,29 @@
       line-height: 1;
       filter: drop-shadow(0 4px 10px rgba(47, 49, 66, 0.12));
     }
+
     /* Per-card themed gradient backgrounds. */
-    .meteor-card[data-subclass="h45"]   .meteor-card-icon { background: linear-gradient(135deg, #fbede4 0%, #f1cfae 100%); }
-    .meteor-card[data-subclass="cm2"]   .meteor-card-icon { background: linear-gradient(135deg, #2d2d3a 0%, #1a1a25 100%); color: #facc15; }
-    .meteor-card[data-subclass="lunar"] .meteor-card-icon { background: linear-gradient(135deg, #ece9f8 0%, #c5c2dc 100%); }
-    .meteor-card[data-subclass="iiiab"] .meteor-card-icon { background: linear-gradient(135deg, #d4b896 0%, #8e6a3e 100%); color: #fff; }
-    .meteor-card[data-subclass="pmg"]   .meteor-card-icon { background: linear-gradient(135deg, #e6f4ee 0%, #7fc8b0 100%); }
+    .meteor-card[data-subclass="h45"] .meteor-card-icon {
+      background: linear-gradient(135deg, #fbede4 0%, #f1cfae 100%);
+    }
+
+    .meteor-card[data-subclass="cm2"] .meteor-card-icon {
+      background: linear-gradient(135deg, #2d2d3a 0%, #1a1a25 100%);
+      color: #facc15;
+    }
+
+    .meteor-card[data-subclass="lunar"] .meteor-card-icon {
+      background: linear-gradient(135deg, #ece9f8 0%, #c5c2dc 100%);
+    }
+
+    .meteor-card[data-subclass="iiiab"] .meteor-card-icon {
+      background: linear-gradient(135deg, #d4b896 0%, #8e6a3e 100%);
+      color: #fff;
+    }
+
+    .meteor-card[data-subclass="pmg"] .meteor-card-icon {
+      background: linear-gradient(135deg, #e6f4ee 0%, #7fc8b0 100%);
+    }
 
     .meteor-card-body {
       padding: 1rem 1.1rem 1.2rem;
@@ -635,6 +824,7 @@
       gap: 0.35rem;
       flex: 1;
     }
+
     .meteor-card-group {
       font-size: 0.66rem;
       font-weight: 700;
@@ -642,6 +832,7 @@
       text-transform: uppercase;
       color: var(--ink-soft);
     }
+
     .meteor-card-title {
       font-family: var(--serif);
       font-size: 1.1rem;
@@ -650,12 +841,14 @@
       line-height: 1.25;
       margin: 0;
     }
+
     .meteor-card-price {
       margin-top: auto;
       font-size: 0.92rem;
       font-weight: 600;
       color: var(--lavender);
     }
+
     .meteor-card-note {
       font-size: 0.78rem;
       color: var(--ink-soft);
@@ -663,7 +856,10 @@
     }
 
     /* ----- Card adjustments for emoji icon + description ----------- */
-    .meteor-card { position: relative; }
+    .meteor-card {
+      position: relative;
+    }
+
     /* Edge-to-edge gradient backdrop with a large, perfectly centred
        emoji. The per-card gradients (defined further up) inherit this
        full-width box automatically because we removed all padding and
@@ -680,6 +876,7 @@
       text-align: center;
       filter: drop-shadow(0 4px 10px rgba(47, 49, 66, 0.18));
     }
+
     .meteor-card-desc {
       font-size: 0.82rem;
       line-height: 1.5;
@@ -696,7 +893,11 @@
         0 18px 36px rgba(47, 49, 66, 0.14);
       transform: translateY(-4px);
     }
-    .meteor-card.is-selected .meteor-card-title { color: var(--lavender); }
+
+    .meteor-card.is-selected .meteor-card-title {
+      color: var(--lavender);
+    }
+
     .meteor-card.is-selected::after {
       content: "✓";
       position: absolute;
@@ -716,10 +917,22 @@
       z-index: 2;
       animation: checkmarkPop 0.4s cubic-bezier(.4, 1.4, .6, 1);
     }
+
     @keyframes checkmarkPop {
-      0%   { transform: scale(0);   opacity: 0; }
-      60%  { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1);   opacity: 1; }
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     /* ===== Data Explorer (epilog 2 – fully zoomable, 4 layers) ======= */
@@ -728,14 +941,16 @@
       font-family: var(--sans);
       font-size: 1.3rem;
     }
+
     .explore-card {
       background: var(--map-bg);
       border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 2px 4px rgba(47, 49, 66, 0.04),
-                  0 16px 40px rgba(47, 49, 66, 0.06);
+        0 16px 40px rgba(47, 49, 66, 0.06);
     }
+
     .explore-toolbar {
       display: flex;
       align-items: center;
@@ -745,6 +960,7 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       flex-wrap: wrap;
     }
+
     .explore-label {
       font-family: var(--sans);
       font-size: 0.72rem;
@@ -753,6 +969,7 @@
       text-transform: uppercase;
       color: var(--map-fg-soft, #94a3b8);
     }
+
     .explore-select {
       background: rgba(255, 255, 255, 0.04);
       color: var(--map-fg, #e2e8f0);
@@ -765,21 +982,25 @@
       cursor: pointer;
       transition: border-color 0.18s, background 0.18s;
     }
+
     .explore-select:hover {
       border-color: var(--blue);
       background: rgba(255, 255, 255, 0.07);
     }
+
     .explore-select:focus {
       outline: none;
       border-color: var(--lavender);
       box-shadow: 0 0 0 3px rgba(139, 128, 214, 0.25);
     }
+
     .explore-hint {
       margin-left: auto;
       font-size: 0.72rem;
       color: rgba(226, 232, 240, 0.55);
       font-style: italic;
     }
+
     .explore-canvas {
       width: 100%;
       height: 620px;
@@ -788,11 +1009,14 @@
     /* Sticky progress bar */
     .progress {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       background: transparent;
       z-index: 50;
     }
+
     .progress-bar {
       height: 100%;
       width: 0%;
@@ -801,9 +1025,12 @@
     }
   </style>
 </head>
+
 <body>
 
-  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 
   <!-- ============================== HERO ============================== -->
   <header class="hero">
@@ -832,7 +1059,8 @@
       <div class="story reveal">
 
         <p class="lead-in">
-          From a scientific perspective we can absolutely assume that meteorites have fallen completely evenly across every square kilometer of Earth throughout its history.
+          From a scientific perspective we can absolutely assume that meteorites have fallen completely evenly across
+          every square kilometer of Earth throughout its history.
         </p>
 
         <p>
@@ -840,17 +1068,21 @@
         </p>
 
         <p>
-          A square kilometer of ocean or desert or a small town all have the exact same statistical probability of being hit.
+          A square kilometer of ocean or desert or a small town all have the exact same statistical probability of being
+          hit.
         </p>
 
         <p>
-          What we see on the map here are <strong>not</strong> the places where meteorites fall but rather where they are <strong>found</strong>.
+          What we see on the map here are <strong>not</strong> the places where meteorites fall but rather where they
+          are <strong>found</strong>.
         </p>
 
         <div class="pull">That is a massive difference.</div>
 
         <p>
-          Whether a meteorite <em>falls</em> is a question of physics, and physics is the same everywhere on Earth. Whether a meteorite is <em>found</em> is a question of people, and people are spread very unevenly across the planet.
+          Whether a meteorite <em>falls</em> is a question of physics, and physics is the same everywhere on Earth.
+          Whether a meteorite is <em>found</em> is a question of people, and people are spread very unevenly across the
+          planet.
         </p>
 
       </div>
@@ -871,8 +1103,9 @@
 
       <div class="map-placeholder has-map reveal" id="map-b-placeholder">
         <div class="map-toolbar" role="tablist" aria-label="Choose base map">
-          <button class="metric-btn active" data-metric="gdp_per_capita_2024">GDP per Capita (2024)</button>
-          <button class="metric-btn" data-metric="population_density_2022">Population Density (2022)</button>
+          <button class="metric-btn active" data-metric="gdp_per_capita_2024">GDP per Capita</button>
+          <button class="metric-btn" data-metric="population_density_2022">Population Density</button>
+          <button class="metric-btn active" id="map-b-toggle-finds" type="button">NASA Finds</button>
         </div>
         <div class="map-canvas with-toolbar" id="map-b"></div>
       </div>
@@ -880,7 +1113,10 @@
       <div class="story reveal">
 
         <p class="lead-in">
-          The moment you overlay the find map with two deeply human variables, <strong>population density</strong> and <strong>gross domestic product per capita</strong>, the pattern becomes startlingly readable. The brightest regions on the find map are almost identical to the places where many people live or where serious money flows into science.
+          The moment you overlay the find map with two deeply human variables, <strong>population density</strong> and
+          <strong>gross domestic product per capita</strong>, the pattern becomes startlingly readable. The brightest
+          regions on the find map are almost identical to the places where many people live or where serious money flows
+          into science.
         </p>
 
         <p>
@@ -891,20 +1127,25 @@
           <div class="keypoint">
             <div class="keypoint-label">Population density</div>
             <h4>Eyes on the ground</h4>
-            <p>Why does population matter? The more people live or farm in an area the more eyes are directed at the ground. Many finds are purely accidental discoveries by farmers or walkers.</p>
+            <p>Why does population matter? The more people live or farm in an area the more eyes are directed at the
+              ground. Many finds are purely accidental discoveries by farmers or walkers.</p>
           </div>
           <div class="keypoint">
             <div class="keypoint-label">Wealth · GDP per capita</div>
             <h4>Money for the search</h4>
-            <p>Why does wealth and GDP matter? Rich countries have the budget for research and camera systems that monitor the sky as well as targeted expeditions.</p>
+            <p>Why does wealth and GDP matter? Rich countries have the budget for research and camera systems that
+              monitor the sky as well as targeted expeditions.</p>
           </div>
         </div>
 
         <p>
-          Together these two factors create a massive <strong>wealth bias</strong> in the data. A fallen meteorite in a Norwegian field finds its way into a museum register within weeks. An identical meteorite that lands at the same second somewhere in the Congolese jungle is most likely lost forever, unnoticed, uncharted, uncounted.
+          Together these two factors create a massive <strong>wealth bias</strong> in the data. A fallen meteorite in a
+          Norwegian field finds its way into a museum register within weeks. An identical meteorite that lands at the
+          same second somewhere in the Congolese jungle is most likely lost forever, unnoticed, uncharted, uncounted.
         </p>
 
-        <div class="pull">In the end the map does not show where meteorites are common. It shows where we bother to look.</div>
+        <div class="pull">In the end the map does not show where meteorites are common. It shows where we bother to
+          look.</div>
 
       </div>
     </div>
@@ -924,13 +1165,11 @@
 
       <div class="map-placeholder has-map reveal" id="map-c-placeholder">
         <div class="map-toolbar" role="tablist" aria-label="Choose layer">
-          <button class="metric-btn active" id="map-c-mode-aridity"
-                  type="button" aria-pressed="true">
-            🌡️  Aridity
+          <button class="metric-btn active" id="map-c-mode-aridity" type="button" aria-pressed="true">
+            🌡️ Aridity
           </button>
-          <button class="metric-btn" id="map-c-mode-finds"
-                  type="button" aria-pressed="false">
-            🪨  Meteorite finds
+          <button class="metric-btn" id="map-c-mode-finds" type="button" aria-pressed="false">
+            🪨 Meteorite finds
           </button>
         </div>
         <div class="map-canvas with-toolbar" id="map-c"></div>
@@ -939,38 +1178,57 @@
       <div class="story story--single-col reveal">
 
         <p class="lead-in">
-          From the logic of the previous two acts the conclusion follows almost inevitably. We now know that meteorites fall evenly everywhere. So if we want to calculate where the most valuable undiscovered meteorites lie we must combine two factors: maximum preservation meets minimal searching. That is where the greatest unrecovered treasure of science lies.
+          From the logic of the previous two acts the conclusion follows almost inevitably. We now know that meteorites
+          fall evenly everywhere. So if we want to calculate where the most valuable undiscovered meteorites lie we must
+          combine two factors: maximum preservation meets minimal searching. That is where the greatest unrecovered
+          treasure of science lies.
         </p>
 
         <p>
-          You can experiment on the map above yourself. Toggle the layers for NASA finds and global aridity on and off. The golden points that remain are not random hits but the result of a precise prediction formula.
+          You can experiment on the map above yourself. Toggle the layers for NASA finds and global aridity on and off.
+          The golden points that remain are not random hits but the result of a precise prediction formula.
         </p>
 
         <div class="keypoints">
           <div class="keypoint">
             <div class="keypoint-label">Criterion 1 · Preservation</div>
             <h4>Aridity Index &lt; 0.1</h4>
-            <p>These are true extreme deserts. The annual rainfall is far below the potential evaporation. Whether in the Sahara or the Atacama or the Iranian highlands iron nickel meteorites survive here for millennia without rusting away. Whatever falls from the sky here stays intact on the ground.</p>
+            <p>These are true extreme deserts. The annual rainfall is far below the potential evaporation. Whether in
+              the Sahara or the Atacama or the Iranian highlands iron nickel meteorites survive here for millennia
+              without rusting away. Whatever falls from the sky here stays intact on the ground.</p>
           </div>
           <div class="keypoint">
             <div class="keypoint-label">Criterion 2 · The Research Gap</div>
             <h4>Find Density &lt; 0.8</h4>
-            <p>Here is where the wheat is separated from the chaff. The map rigorously filters out all areas that have already been successfully searched. This leads to an astonishing effect: known meteorite hotspots like certain regions in the USA or familiar search paths in Morocco do NOT light up here. Why? Because countless collectors and researchers have already been there. The probability of finding a completely new and obvious meteorite there today drops massively because the easy finds have long been picked up.</p>
+            <p>Here is where the wheat is separated from the chaff. The map rigorously filters out all areas that have
+              already been successfully searched. This leads to an astonishing effect: known meteorite hotspots like
+              certain regions in the USA or familiar search paths in Morocco do NOT light up here. Why? Because
+              countless collectors and researchers have already been there. The probability of finding a completely new
+              and obvious meteorite there today drops massively because the easy finds have long been picked up.</p>
           </div>
         </div>
 
         <p>
-          <strong>The Paradox of the North:</strong> If you look at North Africa on the map the prediction becomes perfectly visible. While the edges of the Sahara where many people live or can easily travel are already well searched the deep inaccessible Sahara like in southern Libya or Algeria literally lights up. The physical conditions there are exactly the same as at the found locations. Physics tells us that a meteorite that struck this golden area 5000 years ago is highly likely still lying there today visible like a misprint on white paper. What is missing in these glowing zones is not extraterrestrial material. It is simply a journey there.
+          <strong>The Paradox of the North:</strong> If you look at North Africa on the map the prediction becomes
+          perfectly visible. While the edges of the Sahara where many people live or can easily travel are already well
+          searched the deep inaccessible Sahara like in southern Libya or Algeria literally lights up. The physical
+          conditions there are exactly the same as at the found locations. Physics tells us that a meteorite that struck
+          this golden area 5000 years ago is highly likely still lying there today visible like a misprint on white
+          paper. What is missing in these glowing zones is not extraterrestrial material. It is simply a journey there.
         </p>
 
-        <div class="pull">Anyone who wants to make the next big discovery must travel exactly to where this image is glowing right now.</div>
+        <div class="pull">Anyone who wants to make the next big discovery must travel exactly to where this image is
+          glowing right now.</div>
 
         <p>
-          The Western Sahara or the inner Iran Lut desert or the Atacama plateau or parts of Inner Mongolia. These marked zones are the treasure chests of the coming decades. They hold the highest probability for previously undiscovered meteorite classes that will directly shape our understanding of the early solar system.
+          The Western Sahara or the inner Iran Lut desert or the Atacama plateau or parts of Inner Mongolia. These
+          marked zones are the treasure chests of the coming decades. They hold the highest probability for previously
+          undiscovered meteorite classes that will directly shape our understanding of the early solar system.
         </p>
 
         <p>
-          The fact that this map can be read so clearly is the most beautiful confirmation of our initial thesis: meteorites fall completely evenly everywhere. We just do not see them where nobody looks.
+          The fact that this map can be read so clearly is the most beautiful confirmation of our initial thesis:
+          meteorites fall completely evenly everywhere. We just do not see them where nobody looks.
         </p>
 
       </div>
@@ -1048,9 +1306,8 @@
 
       <div class="meteor-gallery reveal">
 
-        <button type="button" class="meteor-card"
-                data-group="stein" data-subclass="h45"
-                aria-label="Select Ordinary Chondrite">
+        <button type="button" class="meteor-card" data-group="stein" data-subclass="h45"
+          aria-label="Select Ordinary Chondrite">
           <div class="meteor-card-icon">🪨</div>
           <div class="meteor-card-body">
             <span class="meteor-card-group">Stony Meteorite</span>
@@ -1064,9 +1321,8 @@
           </div>
         </button>
 
-        <button type="button" class="meteor-card"
-                data-group="stein" data-subclass="cm2"
-                aria-label="Select Carbonaceous Chondrite">
+        <button type="button" class="meteor-card" data-group="stein" data-subclass="cm2"
+          aria-label="Select Carbonaceous Chondrite">
           <div class="meteor-card-icon">☄️</div>
           <div class="meteor-card-body">
             <span class="meteor-card-group">Stony Meteorite</span>
@@ -1079,9 +1335,8 @@
           </div>
         </button>
 
-        <button type="button" class="meteor-card"
-                data-group="stein" data-subclass="lunar"
-                aria-label="Select Lunar Meteorite">
+        <button type="button" class="meteor-card" data-group="stein" data-subclass="lunar"
+          aria-label="Select Lunar Meteorite">
           <div class="meteor-card-icon">🌕</div>
           <div class="meteor-card-body">
             <span class="meteor-card-group">Stony Meteorite</span>
@@ -1094,9 +1349,8 @@
           </div>
         </button>
 
-        <button type="button" class="meteor-card"
-                data-group="eisen" data-subclass="iiiab"
-                aria-label="Select Classic Iron Meteorite">
+        <button type="button" class="meteor-card" data-group="eisen" data-subclass="iiiab"
+          aria-label="Select Classic Iron Meteorite">
           <div class="meteor-card-icon">🔩</div>
           <div class="meteor-card-body">
             <span class="meteor-card-group">Iron Meteorite</span>
@@ -1110,9 +1364,8 @@
           </div>
         </button>
 
-        <button type="button" class="meteor-card"
-                data-group="steineisen" data-subclass="pmg"
-                aria-label="Select Pallasite">
+        <button type="button" class="meteor-card" data-group="steineisen" data-subclass="pmg"
+          aria-label="Select Pallasite">
           <div class="meteor-card-icon">💎</div>
           <div class="meteor-card-body">
             <span class="meteor-card-group">Stony Iron Meteorite</span>
@@ -1169,7 +1422,8 @@
   <footer class="outro">
     <div class="wrap-narrow">
       <p class="closing">A map is never just what it shows. It is always also what it conceals.</p>
-      <p class="footnote">PODSV FS26 · ad24-4 — Meteorites, Aridity &amp; Wealth. Data sources: NASA Meteorite Landings, CGIAR Global Aridity Index v3, World Bank (Population Density 2022, GDP per Capita 2024).</p>
+      <p class="footnote">PODSV FS26 · ad24-4 — Meteorites, Aridity &amp; Wealth. Data sources: NASA Meteorite Landings,
+        CGIAR Global Aridity Index v3, World Bank (Population Density 2022, GDP per Capita 2024).</p>
       <div class="outro-row">
         <a href="/" class="btn-outline">← Documentation</a>
       </div>
@@ -1207,57 +1461,57 @@
        ================================================================ -->
   <script>
     // ---- Data injected from Flask ------------------------------------
-    const DATA          = {{ data_json|safe }};
-    const GRID          = {{ grid_json|safe }};
-    const POINTS        = {{ points_json|safe }};
-    const LANDING       = {{ landing_density_json|safe }};
-    const TREASURE      = {{ treasure_zones_json|safe }};
-    const LANDING_CMAX  = {{ landing_cmax }};
+    const DATA = {{ data_json| safe }};
+    const GRID = {{ grid_json| safe }};
+    const POINTS = {{ points_json| safe }};
+    const LANDING = {{ landing_density_json| safe }};
+    const TREASURE = {{ treasure_zones_json| safe }};
+    const LANDING_CMAX = {{ landing_cmax }};
 
     // ---- Shared Plotly config (dark canvas, ported from visualiser) --
     const SCALES = {
       population_density_2022: 'YlOrRd',
-      gdp_per_capita_2024:     'Viridis',
+      gdp_per_capita_2024: 'Viridis',
     };
     const CLAMPS = {
       population_density_2022: { zmin: 0, zmax: 500 },
-      gdp_per_capita_2024:     { zmin: 0, zmax: 100000 },
+      gdp_per_capita_2024: { zmin: 0, zmax: 100000 },
     };
     const METRIC_LABELS = {
       population_density_2022: 'Pop. Density (ppl/km²)',
-      gdp_per_capita_2024:     'GDP per Capita (USD)',
+      gdp_per_capita_2024: 'GDP per Capita (USD)',
     };
 
     const GEO_LAYOUT = {
-      showframe:      false,
+      showframe: false,
       showcoastlines: true,
       coastlinecolor: '#94a3b8',
       coastlinewidth: 0.8,
-      showland:       true,  landcolor: '#1e1e3a',
-      showocean:      true,  oceancolor: '#0f0f1a',
-      showcountries:  true,  countrycolor: '#94a3b8', countrywidth: 0.7,
-      showlakes:      true,  lakecolor: '#0f0f1a',
-      projection:     { type: 'natural earth' },
-      bgcolor:        '#0f0f1a',
-      lataxis:        { range: [-60, 85] },
+      showland: true, landcolor: '#1e1e3a',
+      showocean: true, oceancolor: '#0f0f1a',
+      showcountries: true, countrycolor: '#94a3b8', countrywidth: 0.7,
+      showlakes: true, lakecolor: '#0f0f1a',
+      projection: { type: 'natural earth' },
+      bgcolor: '#0f0f1a',
+      lataxis: { range: [-60, 85] },
     };
     const SHARED_LAYOUT = {
-      geo:           GEO_LAYOUT,
+      geo: GEO_LAYOUT,
       paper_bgcolor: '#0f0f1a',
-      plot_bgcolor:  '#0f0f1a',
-      font:          { family: 'Inter, sans-serif', color: '#e2e8f0' },
-      margin:        { l: 0, r: 0, t: 0, b: 0 },
-      autosize:      true,
+      plot_bgcolor: '#0f0f1a',
+      font: { family: 'Inter, sans-serif', color: '#e2e8f0' },
+      margin: { l: 0, r: 0, t: 0, b: 0 },
+      autosize: true,
     };
     // No scroll-to-zoom, no double-click reset, no modebar – the world
     // map is always shown in full and users only switch metrics via the
     // dedicated HTML buttons. Hover still works.
     const PLOT_CONFIG = {
-      responsive:      true,
-      displayModeBar:  false,
-      scrollZoom:      false,
-      doubleClick:     false,
-      showTips:        false,
+      responsive: true,
+      displayModeBar: false,
+      scrollZoom: false,
+      doubleClick: false,
+      showTips: false,
     };
 
     function fmtNum(v, decimals) {
@@ -1277,10 +1531,12 @@
         z: DATA.map(() => 0),
         colorscale: [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0)']],
         showscale: false, hoverinfo: 'skip',
-        marker: { line: {
-          color: opts.color || '#cbd5e1',
-          width: opts.width || 0.8,
-        }},
+        marker: {
+          line: {
+            color: opts.color || '#cbd5e1',
+            width: opts.width || 0.8,
+          }
+        },
       };
     }
 
@@ -1292,11 +1548,13 @@
         lon: POINTS.map(p => p.lon),
         mode: 'markers',
         marker: {
-          size:    opts.size    || 3.5,
+          size: opts.size || 3.5,
           opacity: opts.opacity || 0.65,
-          color:   opts.color   || '#fbbf24',
-          line:    { color: opts.lineColor || 'rgba(0,0,0,0.45)',
-                     width: opts.lineWidth || 0.25 },
+          color: opts.color || '#fbbf24',
+          line: {
+            color: opts.lineColor || 'rgba(0,0,0,0.45)',
+            width: opts.lineWidth || 0.25
+          },
         },
         hovertemplate:
           '<b>Meteorite Find</b>' +
@@ -1330,7 +1588,7 @@
         '<br><b>Income:</b> ' + d.income_group +
         '<br>─────────────────────' +
         '<br>👥 <b>Pop. Density:</b> ' + fmtNum(d.population_density_2022, 2) + ' /km²' +
-        '<br>💰 <b>GDP/cap:</b> $'     + fmtNum(d.gdp_per_capita_2024, 0)
+        '<br>💰 <b>GDP/cap:</b> $' + fmtNum(d.gdp_per_capita_2024, 0)
       );
       return {
         type: 'choropleth',
@@ -1344,10 +1602,12 @@
         },
         colorscale: SCALES[metric],
         colorbar: {
-          title: { text: METRIC_LABELS[metric],
-                   font:  { color: '#94a3b8', size: 12 } },
+          title: {
+            text: METRIC_LABELS[metric],
+            font: { color: '#94a3b8', size: 12 }
+          },
           tickfont: { color: '#94a3b8' },
-          bgcolor:  '#131325', bordercolor: '#334155',
+          bgcolor: '#131325', bordercolor: '#334155',
           len: 0.55, x: 0.99,
         },
         marker: { line: { color: '#334155', width: 0.4 } },
@@ -1355,18 +1615,33 @@
       };
     }
 
+    let showFindsB = true;
+
     function renderMapB(metric) {
       currentMetricB = metric;
-      document.querySelectorAll('#map-b-placeholder .metric-btn').forEach((btn) => {
+      document.querySelectorAll('#map-b-placeholder .metric-btn[data-metric]').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.metric === metric);
       });
-      Plotly.react('map-b', [
-        buildChoroplethTrace(metric),
-        buildPointsTrace({ size: 2.8, opacity: 0.78,
-                           color: '#ffffff',
-                           lineColor: 'rgba(0,0,0,0.55)', lineWidth: 0.3 }),
-        buildBorderOverlay({ color: 'rgba(255,255,255,0.25)', width: 0.4 }),
-      ], SHARED_LAYOUT, PLOT_CONFIG);
+      const traces = [buildChoroplethTrace(metric)];
+      if (showFindsB) {
+        traces.push(buildPointsTrace({
+          size: 2.8, opacity: 0.78,
+          color: '#ffffff',
+          lineColor: 'rgba(0,0,0,0.55)', lineWidth: 0.3
+        }));
+      }
+      traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.25)', width: 0.4 }));
+      Plotly.react('map-b', traces, SHARED_LAYOUT, PLOT_CONFIG);
+    }
+
+    // NASA finds toggle for Map B
+    const btnFindsB = document.getElementById('map-b-toggle-finds');
+    if (btnFindsB) {
+      btnFindsB.addEventListener('click', () => {
+        showFindsB = !showFindsB;
+        btnFindsB.classList.toggle('active', showFindsB);
+        renderMapB(currentMetricB);
+      });
     }
 
     // ================== MAP C – Aridity + Discovery Gap ==============
@@ -1393,9 +1668,9 @@
             tickmode: 'array',
             tickvals: [0.015, 0.115, 0.35, 0.575, 1.075, 2.0],
             ticktext: ['Hyper-arid', 'Arid', 'Semi-arid',
-                       'Sub-humid',  'Humid', 'Hyper-humid'],
+              'Sub-humid', 'Humid', 'Hyper-humid'],
             tickfont: { color: '#94a3b8' },
-            bgcolor:  '#131325', bordercolor: '#334155',
+            bgcolor: '#131325', bordercolor: '#334155',
             len: 0.55, x: 0.99, xanchor: 'right',
           },
           line: { width: 0 },
@@ -1416,14 +1691,14 @@
         const gap = d.count === 0
           ? '🟢 High unfound potential'
           : (d.count < 5
-              ? '🟡 Moderate unfound potential'
-              : '🔴 Established find hotspot');
+            ? '🟡 Moderate unfound potential'
+            : '🔴 Established find hotspot');
         return '<b>Discovery Gap</b>' +
-               '<br>─────────────────────' +
-               '<br><b>Cell:</b> ' + Number(d.lat).toFixed(1) + '°, '
-                                   + Number(d.lon).toFixed(1) + '°' +
-               '<br><b>Finds in 1° cell:</b> ' + d.count +
-               '<br>' + gap;
+          '<br>─────────────────────' +
+          '<br><b>Cell:</b> ' + Number(d.lat).toFixed(1) + '°, '
+          + Number(d.lon).toFixed(1) + '°' +
+          '<br><b>Finds in 1° cell:</b> ' + d.count +
+          '<br>' + gap;
       });
       return {
         type: 'scattergeo',
@@ -1515,7 +1790,7 @@
         '<b>🏆 Treasure Zone</b>' +
         '<br>─────────────────────' +
         '<br><b>Position:</b> ' + Number(p.lat).toFixed(2) + '°, '
-                                + Number(p.lon).toFixed(2) + '°' +
+        + Number(p.lon).toFixed(2) + '°' +
         '<br><b>Aridity Index:</b> ' + Number(p.aridity_index).toFixed(3) +
         '<br><b>Finds in 1° cell:</b> ' + p.count +
         '<br>─────────────────────' +
@@ -1554,16 +1829,17 @@
         const aridityTrace = buildSubtleAridityBase();
         aridityTrace.marker.showscale = true;
         aridityTrace.marker.colorbar = {
-          title:    { text: 'Aridity', font: { color: '#94a3b8', size: 12 } },
+          title: { text: 'Aridity', font: { color: '#94a3b8', size: 12 } },
           tickmode: 'array',
           tickvals: [0.015, 0.115, 0.35, 0.575, 1.075, 2.0],
           ticktext: ['Hyper-arid', 'Arid', 'Semi-arid',
-                     'Sub-humid',  'Humid', 'Hyper-humid'],
-          tickfont:    { color: '#94a3b8' },
-          bgcolor:     '#131325',
+            'Sub-humid', 'Humid', 'Hyper-humid'],
+          tickfont: { color: '#94a3b8' },
+          bgcolor: '#131325',
           bordercolor: '#334155',
           len: 0.55,
           x: 0.99, xanchor: 'right',
+          y: 0.02, yanchor: 'bottom',
         };
         traces.push(aridityTrace);
         traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.10)', width: 0.4 }));
@@ -1578,21 +1854,22 @@
         });
         // Force colour mapping to a 1-stop "Meteorite Finds" colourbar
         // on the right – uniform value, label only.
-        pts.marker.color      = POINTS.map(() => 1);
+        pts.marker.color = POINTS.map(() => 1);
         pts.marker.colorscale = [[0, '#7dd3fc'], [1, '#7dd3fc']];
-        pts.marker.cmin       = 0;
-        pts.marker.cmax       = 1;
-        pts.marker.showscale  = true;
-        pts.marker.colorbar   = {
-          title:    { text: 'Meteorite Finds', font: { color: '#94a3b8', size: 12 } },
+        pts.marker.cmin = 0;
+        pts.marker.cmax = 1;
+        pts.marker.showscale = true;
+        pts.marker.colorbar = {
+          title: { text: 'Meteorite Finds', font: { color: '#94a3b8', size: 12 } },
           tickmode: 'array',
           tickvals: [0.5],
           ticktext: ['Find location'],
-          tickfont:    { color: '#94a3b8' },
-          bgcolor:     '#131325',
+          tickfont: { color: '#94a3b8' },
+          bgcolor: '#131325',
           bordercolor: '#334155',
           len: 0.18,
           x: 0.99, xanchor: 'right',
+          y: 0.02, yanchor: 'bottom',
         };
         traces.push(pts);
       }
@@ -1608,7 +1885,7 @@
     }
 
     // Mutually exclusive layer switcher.
-    const btnAridC  = document.getElementById('map-c-mode-aridity');
+    const btnAridC = document.getElementById('map-c-mode-aridity');
     const btnFindsC = document.getElementById('map-c-mode-finds');
 
     function setMapCMode(mode) {
@@ -1616,14 +1893,14 @@
       [btnAridC, btnFindsC].forEach((btn) => {
         if (!btn) return;
         const active = btn.dataset && btn.id === 'map-c-mode-' + mode
-                    || btn.id === 'map-c-mode-' + mode;
+          || btn.id === 'map-c-mode-' + mode;
         btn.classList.toggle('active', active);
         btn.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
       renderMapC();
     }
 
-    if (btnAridC)  btnAridC.addEventListener('click',  () => setMapCMode('aridity'));
+    if (btnAridC) btnAridC.addEventListener('click', () => setMapCMode('aridity'));
     if (btnFindsC) btnFindsC.addEventListener('click', () => setMapCMode('finds'));
 
     // ---- Lifecycle: only the map currently in view stays mounted ----
@@ -1647,7 +1924,7 @@
 
     const mapIO = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        const id  = e.target.id;
+        const id = e.target.id;
         const cfg = MAPS[id];
         if (!cfg) return;
 
@@ -1672,7 +1949,7 @@
       });
     }, {
       rootMargin: '80px 0px',
-      threshold:  0.05,
+      threshold: 0.05,
     });
     Object.keys(MAPS).forEach((id) => {
       const el = document.getElementById(id);
@@ -1680,7 +1957,7 @@
     });
 
     // ---- Section-2 metric toggle -------------------------------------
-    document.querySelectorAll('#map-b-placeholder .metric-btn').forEach((btn) => {
+    document.querySelectorAll('#map-b-placeholder .metric-btn[data-metric]').forEach((btn) => {
       btn.addEventListener('click', () => renderMapB(btn.dataset.metric));
     });
 
@@ -1706,19 +1983,19 @@
       stein: {
         label: 'Stony Meteorite',
         classes: [
-          { key: 'h45',   label: 'Ordinary Chondrite (Type H4/H5)',  price:   2.00, hint: 'Very common' },
-          { key: 'l4',    label: 'Ordinary Chondrite (Type L4)',     price:   6.60 },
-          { key: 'ck5',   label: 'Carbonaceous Chondrite (Type CK5)',         price:  17.00 },
-          { key: 'cm2',   label: 'Carbonaceous Chondrite (Type CM2)',         price: 250.00, hint: 'Very rare · scientifically valuable' },
-          { key: 'lunar', label: 'Lunar Meteorite',                price:  55.00, hint: 'Extremely rare' },
+          { key: 'h45', label: 'Ordinary Chondrite (Type H4/H5)', price: 2.00, hint: 'Very common' },
+          { key: 'l4', label: 'Ordinary Chondrite (Type L4)', price: 6.60 },
+          { key: 'ck5', label: 'Carbonaceous Chondrite (Type CK5)', price: 17.00 },
+          { key: 'cm2', label: 'Carbonaceous Chondrite (Type CM2)', price: 250.00, hint: 'Very rare · scientifically valuable' },
+          { key: 'lunar', label: 'Lunar Meteorite', price: 55.00, hint: 'Extremely rare' },
         ],
       },
       eisen: {
         label: 'Iron Meteorite',
         classes: [
           { key: 'iiiab', label: 'Iron Meteorite Type IIIAB', price: 1.25, hint: 'Most common iron type' },
-          { key: 'iva',   label: 'Iron Meteorite Type IVA',   price: 4.00 },
-          { key: 'iiab',  label: 'Iron Meteorite Type IIAB',  price: 5.00 },
+          { key: 'iva', label: 'Iron Meteorite Type IVA', price: 4.00 },
+          { key: 'iiab', label: 'Iron Meteorite Type IIAB', price: 5.00 },
         ],
       },
       steineisen: {
@@ -1736,10 +2013,10 @@
     };
 
     const groupSel = document.getElementById('calc-group');
-    const subSel   = document.getElementById('calc-subclass');
-    const massEl   = document.getElementById('calc-mass');
-    const btnEl    = document.getElementById('calc-button');
-    const resEl    = document.getElementById('calc-result');
+    const subSel = document.getElementById('calc-subclass');
+    const massEl = document.getElementById('calc-mass');
+    const btnEl = document.getElementById('calc-button');
+    const resEl = document.getElementById('calc-result');
 
     // ---- Cascading dropdown -----------------------------------------
     function populateSubclasses(groupKey, preselectKey) {
@@ -1786,8 +2063,8 @@
 
     function calculate() {
       const groupKey = groupSel.value;
-      const subKey   = subSel.value;
-      const mass     = parseFloat(massEl.value);
+      const subKey = subSel.value;
+      const mass = parseFloat(massEl.value);
 
       if (!groupKey) {
         resEl.innerHTML = '<span class="calc-result-error">Please select a main group first.</span>';
@@ -1810,10 +2087,10 @@
       resEl.innerHTML =
         '<div class="calc-price">' + fmtEur(price) + '</div>' +
         '<div class="calc-breakdown">' +
-          '<b>' + fmtG(mass) + ' g</b> &nbsp;×&nbsp; <b>' + fmtEur(cls.price) + ' / g</b>' +
-          '<span class="calc-meta">' +
-            'Estimated for <em>' + cls.label + '</em>' +
-          '</span>' +
+        '<b>' + fmtG(mass) + ' g</b> &nbsp;×&nbsp; <b>' + fmtEur(cls.price) + ' / g</b>' +
+        '<span class="calc-meta">' +
+        'Estimated for <em>' + cls.label + '</em>' +
+        '</span>' +
         '</div>';
     }
     btnEl.addEventListener('click', calculate);
@@ -1825,7 +2102,7 @@
     document.querySelectorAll('.meteor-card').forEach((card) => {
       card.addEventListener('click', () => {
         const groupKey = card.dataset.group;
-        const subKey   = card.dataset.subclass;
+        const subKey = card.dataset.subclass;
         if (!groupKey || !subKey) return;
 
         groupSel.value = groupKey;
@@ -1836,7 +2113,7 @@
         // via the .is-selected rule). This survives until another card
         // is clicked.
         document.querySelectorAll('.meteor-card.is-selected')
-                .forEach((c) => c.classList.remove('is-selected'));
+          .forEach((c) => c.classList.remove('is-selected'));
         card.classList.add('is-selected');
 
         // Briefly flash the clicked card and scroll the calculator into
@@ -1872,23 +2149,23 @@
   <script>
     // Independent config: zoom + pan + reset enabled.
     const EXPLORE_CONFIG = {
-      responsive:             true,
-      displayModeBar:         true,
-      scrollZoom:             true,
-      doubleClick:            'reset',
-      showTips:               false,
-      displaylogo:            false,
+      responsive: true,
+      displayModeBar: true,
+      scrollZoom: true,
+      doubleClick: 'reset',
+      showTips: false,
+      displaylogo: false,
       modeBarButtonsToRemove: ['lasso2d', 'select2d'],
     };
 
     // Re-use the shared GEO_LAYOUT but override margin/autosize.
     const EXPLORE_LAYOUT = {
-      geo:           GEO_LAYOUT,
+      geo: GEO_LAYOUT,
       paper_bgcolor: '#0f0f1a',
-      plot_bgcolor:  '#0f0f1a',
-      font:          { family: 'Inter, sans-serif', color: '#e2e8f0' },
-      margin:        { l: 0, r: 0, t: 0, b: 0 },
-      autosize:      true,
+      plot_bgcolor: '#0f0f1a',
+      font: { family: 'Inter, sans-serif', color: '#e2e8f0' },
+      margin: { l: 0, r: 0, t: 0, b: 0 },
+      autosize: true,
     };
 
     // Discovery Gap as a STANDALONE layer (the scrolly version hides
@@ -1899,9 +2176,9 @@
       trace.marker.opacity = 0.75;
       trace.marker.showscale = true;
       trace.marker.colorbar = {
-        title:    { text: 'Finds (log)', font: { color: '#94a3b8', size: 12 } },
+        title: { text: 'Finds (log)', font: { color: '#94a3b8', size: 12 } },
         tickfont: { color: '#94a3b8' },
-        bgcolor:  '#131325',
+        bgcolor: '#131325',
         bordercolor: '#334155',
         len: 0.55, x: 0.99,
       };
@@ -1952,4 +2229,5 @@
   </script>
 
 </body>
+
 </html>
