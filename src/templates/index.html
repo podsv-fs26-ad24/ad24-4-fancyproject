@@ -514,6 +514,12 @@
       overflow: hidden;
     }
 
+    /* Plotly applies transform="translate(-N,0)" to right-anchored
+       colorbars. On Map C this shifts the bar into the map. Override. */
+    #map-c .colorbar {
+      transform: translate(0, 0) !important;
+    }
+
     .map-toolbar {
       display: flex;
       justify-content: flex-end;
@@ -1166,10 +1172,10 @@
       <div class="map-placeholder has-map reveal" id="map-c-placeholder">
         <div class="map-toolbar" role="tablist" aria-label="Choose layer">
           <button class="metric-btn active" id="map-c-mode-aridity" type="button" aria-pressed="true">
-            🌡️ Aridity
+            Aridity
           </button>
           <button class="metric-btn" id="map-c-mode-finds" type="button" aria-pressed="false">
-            🪨 Meteorite finds
+            Meteorite finds
           </button>
         </div>
         <div class="map-canvas with-toolbar" id="map-c"></div>
@@ -1839,7 +1845,6 @@
           bordercolor: '#334155',
           len: 0.55,
           x: 0.99, xanchor: 'right',
-          y: 0.02, yanchor: 'bottom',
         };
         traces.push(aridityTrace);
         traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.10)', width: 0.4 }));
@@ -1869,7 +1874,6 @@
           bordercolor: '#334155',
           len: 0.18,
           x: 0.99, xanchor: 'right',
-          y: 0.02, yanchor: 'bottom',
         };
         traces.push(pts);
       }

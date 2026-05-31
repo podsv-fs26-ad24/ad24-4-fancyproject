@@ -36,43 +36,57 @@ The project team develops the product, lecturers assess its quality, and users b
 ## User Analysis
 
 PERSONA 1
-Name: Lukas (The Amateur Investor)
-Age: 29
+Name: Lukas (University Student)
+Age: 23
+Quote: "I need hard data to know what my find is actually worth on the market."
 
 ![ ](pics/lukas.jpeg){ width=70% }
 
-Background & Behavior
-- Interested in alternative assets; frequently browses online auctions for space memorabilia.
+Background & Behavior:
+Lucas is a dedicated student who finances his studies through an unusual but lucrative hobby: meteorite hunting. He has read deeply into the subject, knows the technical terminology, and has already found and sold genuine pieces online. He is highly digitally literate and frequently uses collector forums and auction platforms.
 
-Goals
-- Wants to verify if a meteorite price on eBay is fair and understand the rarity of certain classes (e.g., Pallasites).
+Goals:
 
-Pain Points
-- Lack of market transparency; fear of overpaying for "scam" listings or fake stones.
+- To get the maximum yet fair price for his finds to pay for his tuition and equipment.
 
-Key Features
-- An interactive tool that estimates price based on mass, recclass, and fall/found status
+- To quickly and reliably determine how rare a specific meteorite class truly is based on its mass.
 
-Local Impact Estimator
-- Estimates expected meteorite falls vs. actual detection probability
+Pain Points:
+
+- The meteorite market lacks transparency. Lucas is often unsure whether he is pricing his finds too low or getting ripped off by commercial buyers.
+
+- He lacks a fast, data-driven tool to help classify rarity without having to spend hours digging through old catalogs.
+
+Key Features Used on Your Site:
+The interactive Class Calculator. He uses this tool as a quick benchmark method. He selects the visual description of his find, enters the mass, and immediately sees its statistical rarity. This helps him justify his pricing on eBay or in collector communities.
 
 PERSONA 2
-Name: Sarah (The Field Hunter)
-Age: 35
+Name: Sarah (Fit Retiree)
+Age: 67
+Quote: "My camper, the vastness of the desert, and the chance to find a piece of the universe—that is my perfect vacation."
 
 ![ ](pics/sarah.png){ width=70% }
 
-Background & Behavior
-- Professional geologist and adventurer; plans high-risk search expeditions.
+Background & Behavior:
+Sarah is a highly active retiree who loves to travel. Her life changed when she accidentally found a small meteorite during a hike. Since then, she has become a passionate amateur collector. She strategically plans her holiday routes (mostly in her camper van) around areas where she has the best chances of making a new discovery.
 
-Goals
-- Identify "undiscovered" treasure zones where preservation potential is high but human search history is low.
+Goals:
 
-Pain Points
-- NASA data only shows what was found, not what is still there; high financial risk of site selection.
+- To have a meaningful, exciting mission for her long holiday road trips.
 
-Key Features
-- A bivariate map highlighting uninhabited, arid zones with high visual discovery probability.
+- To explore large, undiscovered areas that offer a high probability of yielding a genuine find.
+
+Pain Points:
+
+- She does not have a background in science. Raw NASA databases, endless Excel spreadsheets, or complex GIS software are far too complicated and overwhelming for her.
+
+- She needs a highly accessible, extremely user-friendly environment that instantly shows her where driving her camper will be worth the effort.
+
+Key Features Used on Your Site:
+The Storytelling and the Interactive Treasure Map (Map C). The clean, scrollable design caters perfectly to her needs. She uses the map to cross-reference the "Discovery Gap" (the golden points) with her upcoming travel route. If a region in southern Spain or North Africa lights up, she plans her next major stop exactly there.
+
+Image Prompt for the AI Generator (Sarah):
+A photorealistic portrait of a fit, active 67-year-old woman with short, practical grey hair and a warm, adventurous smile. She is wearing a comfortable, stylish outdoor trekking shirt and a sun hat hanging down her back. The brightly lit, blurred background shows a vast, beautiful arid landscape with a camper van in the distance. Warm sunlight, cinematic, highly detailed, 8k resolution.
 
 
 
