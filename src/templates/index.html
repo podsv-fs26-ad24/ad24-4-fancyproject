@@ -513,6 +513,181 @@
     }
     .calc-meta em { font-style: normal; font-weight: 600; color: var(--ink); }
 
+    /* Disabled cascade state for the subclass <select>. */
+    .calc-field select:disabled {
+      background: var(--paper-tint);
+      color: var(--ink-soft);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* ----- Meteorite gallery (5 click-to-fill cards) ---------------- */
+    .meteor-gallery-intro {
+      margin-top: 3rem;
+      max-width: 60ch;
+    }
+    .meteor-gallery-intro h3 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+    .meteor-gallery-intro p {
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+    }
+    .meteor-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+    .meteor-card {
+      /* button reset */
+      font-family: var(--sans);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: 0 1px 2px rgba(47, 49, 66, 0.04);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .meteor-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(47, 49, 66, 0.14);
+      border-color: var(--lavender);
+    }
+    .meteor-card:focus-visible {
+      outline: 3px solid rgba(139, 128, 214, 0.45);
+      outline-offset: 3px;
+    }
+    .meteor-card:active { transform: translateY(-2px); }
+
+    /* Brief "pulse" when the user clicks a card – the dropdowns update,
+       and the card flashes so the user sees the connection. */
+    .meteor-card.is-flashing {
+      animation: cardFlash 0.7s ease;
+    }
+    @keyframes cardFlash {
+      0%   { box-shadow: 0 0 0 0 rgba(139, 128, 214, 0.55); }
+      60%  { box-shadow: 0 0 0 16px rgba(139, 128, 214, 0); }
+      100% { box-shadow: 0 18px 36px rgba(47, 49, 66, 0.14); }
+    }
+
+    .meteor-card-icon {
+      font-size: 3.4rem;
+      text-align: center;
+      padding: 1.6rem 0 1.3rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 10px rgba(47, 49, 66, 0.12));
+    }
+    /* Per-card themed gradient backgrounds. */
+    .meteor-card[data-subclass="h45"]   .meteor-card-icon { background: linear-gradient(135deg, #fbede4 0%, #f1cfae 100%); }
+    .meteor-card[data-subclass="cm2"]   .meteor-card-icon { background: linear-gradient(135deg, #2d2d3a 0%, #1a1a25 100%); color: #facc15; }
+    .meteor-card[data-subclass="lunar"] .meteor-card-icon { background: linear-gradient(135deg, #ece9f8 0%, #c5c2dc 100%); }
+    .meteor-card[data-subclass="iiiab"] .meteor-card-icon { background: linear-gradient(135deg, #d4b896 0%, #8e6a3e 100%); color: #fff; }
+    .meteor-card[data-subclass="pmg"]   .meteor-card-icon { background: linear-gradient(135deg, #e6f4ee 0%, #7fc8b0 100%); }
+
+    .meteor-card-body {
+      padding: 1rem 1.1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+    }
+    .meteor-card-group {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .meteor-card-title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+      margin: 0;
+    }
+    .meteor-card-price {
+      margin-top: auto;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--lavender);
+    }
+    .meteor-card-note {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    /* ----- Card adjustments for emoji icon + description ----------- */
+    .meteor-card { position: relative; }
+    /* Edge-to-edge gradient backdrop with a large, perfectly centred
+       emoji. The per-card gradients (defined further up) inherit this
+       full-width box automatically because we removed all padding and
+       let height + flex centring do the work. */
+    .meteor-card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 170px;
+      padding: 0;
+      font-size: 5rem;
+      line-height: 1;
+      text-align: center;
+      filter: drop-shadow(0 4px 10px rgba(47, 49, 66, 0.18));
+    }
+    .meteor-card-desc {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      margin: 0.25rem 0 0;
+    }
+
+    /* ----- "Selected" state (persistent highlight after click) ------- */
+    .meteor-card.is-selected {
+      border-color: var(--lavender);
+      box-shadow:
+        0 0 0 3px var(--lavender-50),
+        0 0 28px rgba(139, 128, 214, 0.35),
+        0 18px 36px rgba(47, 49, 66, 0.14);
+      transform: translateY(-4px);
+    }
+    .meteor-card.is-selected .meteor-card-title { color: var(--lavender); }
+    .meteor-card.is-selected::after {
+      content: "✓";
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      background: var(--lavender);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 14px rgba(139, 128, 214, 0.45);
+      z-index: 2;
+      animation: checkmarkPop 0.4s cubic-bezier(.4, 1.4, .6, 1);
+    }
+    @keyframes checkmarkPop {
+      0%   { transform: scale(0);   opacity: 0; }
+      60%  { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+
     /* ===== Data Explorer (epilog 2 – fully zoomable, 4 layers) ======= */
     .act-explore .act-number {
       background: var(--lavender);
@@ -722,7 +897,17 @@
       </div>
 
       <div class="map-placeholder has-map reveal" id="map-c-placeholder">
-        <div class="map-canvas" id="map-c"></div>
+        <div class="map-toolbar" role="tablist" aria-label="Layer wählen">
+          <button class="metric-btn active" id="map-c-mode-aridity"
+                  type="button" aria-pressed="true">
+            🌡️  Trockenheit
+          </button>
+          <button class="metric-btn" id="map-c-mode-finds"
+                  type="button" aria-pressed="false">
+            🪨  Meteoritenfunde
+          </button>
+        </div>
+        <div class="map-canvas with-toolbar" id="map-c"></div>
       </div>
 
       <div class="story reveal">
@@ -779,33 +964,39 @@
       </div>
 
       <p class="lead-in reveal" style="max-width: 60ch; margin-bottom: 2rem;">
-        Wähle ein bekanntes Stück aus dem Sammler-Katalog oder gib eigene Werte ein.
-        Wir berechnen mit dem in Akt II beschriebenen <strong>Median-Preis-pro-Gramm-Modell</strong>
-        pro Meteoriten-Klasse, was dein Stein auf dem Sammlermarkt ungefähr wert wäre.
+        Wähle die <strong>Hauptgruppe</strong> deines Steins, dann eine
+        spezifische <strong>Unterklasse</strong>, gib seine Masse in Gramm
+        ein — und der Rechner schätzt dir den Wert auf dem Sammlermarkt
+        in Euro. Wenn du die Klasse nicht kennst, klicke einfach eine der
+        fünf Bildkarten weiter unten an.
       </p>
 
       <div class="calc reveal">
         <div class="calc-grid">
           <label class="calc-field">
-            <span class="calc-label">Meteorit (optional)</span>
-            <select id="calc-name">
-              <option value="">— Eigenes Stück eingeben —</option>
+            <span class="calc-label">1 · Hauptgruppe</span>
+            <select id="calc-group">
+              <option value="">— Auswählen —</option>
+              <option value="stein">Steinmeteorit</option>
+              <option value="eisen">Eisenmeteorit</option>
+              <option value="steineisen">Stein-Eisen-Meteorit</option>
+              <option value="unbekannt">Unbekannt / Sonstige</option>
             </select>
-            <span class="calc-hint">Wählen, um Klasse und Masse automatisch zu füllen.</span>
+            <span class="calc-hint">Grobe Materialkategorie des Steins.</span>
           </label>
 
           <label class="calc-field">
-            <span class="calc-label">Masse in Gramm</span>
+            <span class="calc-label">2 · Unterklasse</span>
+            <select id="calc-subclass" disabled>
+              <option value="">— Erst Hauptgruppe wählen —</option>
+            </select>
+            <span class="calc-hint">Spezifische Mineralogie — bestimmt den Grammpreis.</span>
+          </label>
+
+          <label class="calc-field">
+            <span class="calc-label">3 · Masse in Gramm</span>
             <input type="number" id="calc-mass" min="0" step="0.01" placeholder="z. B. 25.5">
-            <span class="calc-hint">Wieviel wiegt dein Stein?</span>
-          </label>
-
-          <label class="calc-field">
-            <span class="calc-label">Meteoriten-Klasse</span>
-            <select id="calc-category">
-              <option value="">— Klasse wählen —</option>
-            </select>
-            <span class="calc-hint">recclass-Bezeichnung gemäss NASA-Katalog.</span>
+            <span class="calc-hint">Auf der Küchenwaage gemessen reicht völlig.</span>
           </label>
         </div>
 
@@ -818,6 +1009,98 @@
             Felder ausfüllen und Button drücken — die Schätzung erscheint hier.
           </span>
         </div>
+      </div>
+
+      <div class="meteor-gallery-intro reveal">
+        <h3>Du kennst die Klasse nicht?</h3>
+        <p>
+          Klicke auf das Bild, das deinem Stein am ähnlichsten sieht — die
+          beiden Dropdowns füllen sich automatisch, du musst nur noch die
+          Masse eingeben.
+        </p>
+      </div>
+
+      <div class="meteor-gallery reveal">
+
+        <button type="button" class="meteor-card"
+                data-group="stein" data-subclass="h45"
+                aria-label="Gewöhnlicher Chondrit auswählen">
+          <div class="meteor-card-icon">🪨</div>
+          <div class="meteor-card-body">
+            <span class="meteor-card-group">Steinmeteorit</span>
+            <h4 class="meteor-card-title">Gewöhnlicher Chondrit</h4>
+            <p class="meteor-card-desc">
+              Sieht aus wie ein normaler, grauer oder bräunlicher Stein, hat aber
+              oft eine dünne, schwarze Schmelzkruste. Wenn man ihn anschleift,
+              glänzen im Inneren winzige Metallpunkte.
+            </p>
+            <span class="meteor-card-price">≈ 2 € / g</span>
+          </div>
+        </button>
+
+        <button type="button" class="meteor-card"
+                data-group="stein" data-subclass="cm2"
+                aria-label="Kohliger Chondrit auswählen">
+          <div class="meteor-card-icon">☄️</div>
+          <div class="meteor-card-body">
+            <span class="meteor-card-group">Steinmeteorit</span>
+            <h4 class="meteor-card-title">Kohliger Chondrit</h4>
+            <p class="meteor-card-desc">
+              Kohlrabenschwarz, oft etwas brüchig. Erinnert optisch an ein Stück
+              Grillkohle, ist aber von winzigen, weissen Pünktchen durchsetzt.
+            </p>
+            <span class="meteor-card-price">≈ 250 € / g</span>
+          </div>
+        </button>
+
+        <button type="button" class="meteor-card"
+                data-group="stein" data-subclass="lunar"
+                aria-label="Mondmeteorit auswählen">
+          <div class="meteor-card-icon">🌕</div>
+          <div class="meteor-card-body">
+            <span class="meteor-card-group">Steinmeteorit</span>
+            <h4 class="meteor-card-title">Mondmeteorit</h4>
+            <p class="meteor-card-desc">
+              Extrem selten. Sieht meist hellgrau bis weiss gesprenkelt aus —
+              fast so, als hätte man verschiedene Steinchen in grauen Zement
+              eingebacken (Brekkzie).
+            </p>
+            <span class="meteor-card-price">≈ 55 € / g</span>
+          </div>
+        </button>
+
+        <button type="button" class="meteor-card"
+                data-group="eisen" data-subclass="iiiab"
+                aria-label="Klassischer Eisenmeteorit auswählen">
+          <div class="meteor-card-icon">🔩</div>
+          <div class="meteor-card-body">
+            <span class="meteor-card-group">Eisenmeteorit</span>
+            <h4 class="meteor-card-title">Klassischer Eisenmeteorit</h4>
+            <p class="meteor-card-desc">
+              Sehr schwer und stark magnetisch! Aussen oft rostig-braun oder
+              dunkelgrau mit daumendicken Dellen auf der Oberfläche. Besteht
+              komplett aus Metall.
+            </p>
+            <span class="meteor-card-price">≈ 1.25 € / g</span>
+          </div>
+        </button>
+
+        <button type="button" class="meteor-card"
+                data-group="steineisen" data-subclass="pmg"
+                aria-label="Pallasit auswählen">
+          <div class="meteor-card-icon">💎</div>
+          <div class="meteor-card-body">
+            <span class="meteor-card-group">Stein-Eisen-Meteorit</span>
+            <h4 class="meteor-card-title">Pallasit (Kristall-Meteorit)</h4>
+            <p class="meteor-card-desc">
+              Der wohl schönste Weltraumstein. Ein stabiles Metallnetz, in das
+              wunderschöne, gelb-grüne oder honigfarbene Kristalle (Olivin)
+              eingebettet sind.
+            </p>
+            <span class="meteor-card-price">≈ 10 € / g</span>
+          </div>
+        </button>
+
       </div>
     </div>
   </section>
@@ -1229,15 +1512,91 @@
       };
     }
 
+    // Map C: treasure glow always on top, the BACKGROUND context layer
+    // switches between aridity and meteorite finds via the toolbar
+    // (mutually exclusive – never both at once). Default = aridity.
+    // The legend lives on the LEFT side of the plot.
+    let mapCMode = 'aridity';
+
     function renderMapC() {
-      Plotly.react('map-c', [
-        buildSubtleAridityBase(),
-        buildBorderOverlay({ color: 'rgba(255,255,255,0.10)', width: 0.4 }),
+      const traces = [];
+
+      if (mapCMode === 'aridity') {
+        // Subtle aridity heatmap + its discrete-class legend on the LEFT.
+        const aridityTrace = buildSubtleAridityBase();
+        aridityTrace.marker.showscale = true;
+        aridityTrace.marker.colorbar = {
+          title:    { text: 'Trockenheit', font: { color: '#94a3b8', size: 12 } },
+          tickmode: 'array',
+          tickvals: [0.015, 0.115, 0.35, 0.575, 1.075, 2.0],
+          ticktext: ['Hyper-arid', 'Arid', 'Semi-arid',
+                     'Sub-humid',  'Humid', 'Hyper-humid'],
+          tickfont:    { color: '#94a3b8' },
+          bgcolor:     '#131325',
+          bordercolor: '#334155',
+          len: 0.55,
+          x: 0.01, xanchor: 'left',
+        };
+        traces.push(aridityTrace);
+        traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.10)', width: 0.4 }));
+      } else {
+        // Meteorite finds – cyan dots on a dark canvas, with a tiny
+        // single-swatch legend on the LEFT so the layer is named.
+        traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.15)', width: 0.5 }));
+        const pts = buildPointsTrace({
+          size: 2.4, opacity: 0.55,
+          color: '#7dd3fc',
+          lineColor: 'rgba(0,0,0,0.45)', lineWidth: 0.15,
+        });
+        // Force colour mapping to a 1-stop "Meteoritenfunde" colourbar
+        // on the left – uniform value, label only.
+        pts.marker.color      = POINTS.map(() => 1);
+        pts.marker.colorscale = [[0, '#7dd3fc'], [1, '#7dd3fc']];
+        pts.marker.cmin       = 0;
+        pts.marker.cmax       = 1;
+        pts.marker.showscale  = true;
+        pts.marker.colorbar   = {
+          title:    { text: 'Meteoritenfunde', font: { color: '#94a3b8', size: 12 } },
+          tickmode: 'array',
+          tickvals: [0.5],
+          ticktext: ['Fundort'],
+          tickfont:    { color: '#94a3b8' },
+          bgcolor:     '#131325',
+          bordercolor: '#334155',
+          len: 0.18,
+          x: 0.01, xanchor: 'left',
+        };
+        traces.push(pts);
+      }
+
+      // Treasure glow ALWAYS on top – the section's headline visual.
+      traces.push(
         buildTreasureHalo(),
         buildTreasureMid(),
         buildTreasureCore(),
-      ], SHARED_LAYOUT, PLOT_CONFIG);
+      );
+
+      Plotly.react('map-c', traces, SHARED_LAYOUT, PLOT_CONFIG);
     }
+
+    // Mutually exclusive layer switcher.
+    const btnAridC  = document.getElementById('map-c-mode-aridity');
+    const btnFindsC = document.getElementById('map-c-mode-finds');
+
+    function setMapCMode(mode) {
+      mapCMode = mode;
+      [btnAridC, btnFindsC].forEach((btn) => {
+        if (!btn) return;
+        const active = btn.dataset && btn.id === 'map-c-mode-' + mode
+                    || btn.id === 'map-c-mode-' + mode;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      renderMapC();
+    }
+
+    if (btnAridC)  btnAridC.addEventListener('click',  () => setMapCMode('aridity'));
+    if (btnFindsC) btnFindsC.addEventListener('click', () => setMapCMode('finds'));
 
     // ---- Lifecycle: only the map currently in view stays mounted ----
     // Render when its placeholder enters the viewport, Plotly.purge()
@@ -1307,91 +1666,169 @@
   </script>
 
   <!-- ================================================================
-       Price calculator – pure DOM, no Plotly. Uses the same model as
-       src/helpers/predict_meteorite_prices.py: predicted price =
-       mass × median price-per-gram for the chosen recclass.
+       Price calculator – pure DOM, no Plotly.
+       Cascading two-stage dropdown (Hauptgruppe → Unterklasse) plus a
+       click-to-fill image gallery. The pricing is hardcoded from the
+       lay-friendly mapping derived from output_data/Meteorite_Landings_
+       NASA_with_prices.csv (see app.py for the underlying data).
        ================================================================ -->
   <script>
-    const PRICES_LISTINGS = {{ prices_listings_json|safe }};
-    const PRICE_MODEL     = {{ price_model_json|safe }};
-    const CATEGORIES      = {{ categories_json|safe }};
+    // Pricing model in EUR / gram – grouped by main meteorite family.
+    const METEOR_GROUPS = {
+      stein: {
+        label: 'Steinmeteorit',
+        classes: [
+          { key: 'h45',   label: 'Gewöhnlicher Chondrit (Typ H4/H5)',  price:   2.00, hint: 'Sehr häufig' },
+          { key: 'l4',    label: 'Gewöhnlicher Chondrit (Typ L4)',     price:   6.60 },
+          { key: 'ck5',   label: 'Kohliger Chondrit (Typ CK5)',         price:  17.00 },
+          { key: 'cm2',   label: 'Kohliger Chondrit (Typ CM2)',         price: 250.00, hint: 'Sehr selten · wissenschaftlich wertvoll' },
+          { key: 'lunar', label: 'Mondmeteorit (Lunar)',                price:  55.00, hint: 'Extrem selten' },
+        ],
+      },
+      eisen: {
+        label: 'Eisenmeteorit',
+        classes: [
+          { key: 'iiiab', label: 'Eisenmeteorit Typ IIIAB', price: 1.25, hint: 'Häufigster Eisen-Typ' },
+          { key: 'iva',   label: 'Eisenmeteorit Typ IVA',   price: 4.00 },
+          { key: 'iiab',  label: 'Eisenmeteorit Typ IIAB',  price: 5.00 },
+        ],
+      },
+      steineisen: {
+        label: 'Stein-Eisen-Meteorit',
+        classes: [
+          { key: 'pmg', label: 'Pallasit (Typ PMG)', price: 10.00, hint: 'Mit Olivin-Kristallen' },
+        ],
+      },
+      unbekannt: {
+        label: 'Unbekannt / Sonstige',
+        classes: [
+          { key: 'sonst', label: 'Sonstige / unbekannte Klasse', price: 3.00, hint: 'Konservativer Pauschalwert' },
+        ],
+      },
+    };
 
-    const nameSel = document.getElementById('calc-name');
-    const catSel  = document.getElementById('calc-category');
-    const massEl  = document.getElementById('calc-mass');
-    const btnEl   = document.getElementById('calc-button');
-    const resEl   = document.getElementById('calc-result');
+    const groupSel = document.getElementById('calc-group');
+    const subSel   = document.getElementById('calc-subclass');
+    const massEl   = document.getElementById('calc-mass');
+    const btnEl    = document.getElementById('calc-button');
+    const resEl    = document.getElementById('calc-result');
 
-    // ---- Populate dropdowns -----------------------------------------
-    PRICES_LISTINGS.forEach((p, i) => {
-      const opt = document.createElement('option');
-      opt.value = String(i);
-      opt.textContent = p.name;
-      nameSel.appendChild(opt);
-    });
-    CATEGORIES.forEach((c) => {
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = c;
-      catSel.appendChild(opt);
-    });
+    // ---- Cascading dropdown -----------------------------------------
+    function populateSubclasses(groupKey, preselectKey) {
+      subSel.innerHTML = '';
+      const group = METEOR_GROUPS[groupKey];
+      if (!group) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = '— Erst Hauptgruppe wählen —';
+        subSel.appendChild(opt);
+        subSel.disabled = true;
+        return;
+      }
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = '— Klasse wählen —';
+      subSel.appendChild(placeholder);
+      group.classes.forEach((c) => {
+        const opt = document.createElement('option');
+        opt.value = c.key;
+        opt.textContent = c.label + (c.hint ? ' · ' + c.hint : '');
+        subSel.appendChild(opt);
+      });
+      subSel.disabled = false;
+      if (preselectKey) subSel.value = preselectKey;
+    }
 
-    // ---- Selecting a listing auto-fills category & mass -------------
-    nameSel.addEventListener('change', () => {
-      if (nameSel.value === '') return;
-      const p = PRICES_LISTINGS[parseInt(nameSel.value, 10)];
-      if (!p) return;
-      massEl.value = p.mass;
-      catSel.value = p.category;
-    });
-
-    // ---- Number formatters ------------------------------------------
-    const fmtUsd = (v) => v.toLocaleString('de-CH', {
-      minimumFractionDigits: 2, maximumFractionDigits: 2,
-    });
-    const fmtG = (v) => v.toLocaleString('de-CH', {
-      maximumFractionDigits: 2,
+    groupSel.addEventListener('change', () => {
+      populateSubclasses(groupSel.value);
     });
 
     // ---- Calculate ---------------------------------------------------
-    function calculate() {
-      const mass = parseFloat(massEl.value);
-      const cat  = catSel.value;
+    const fmtEur = (v) => v.toLocaleString('de-CH', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: 2, maximumFractionDigits: 2,
+    });
+    const fmtG = (v) => v.toLocaleString('de-CH', { maximumFractionDigits: 2 });
 
-      if (!cat) {
-        resEl.innerHTML =
-          '<span class="calc-result-error">Bitte eine Meteoriten-Klasse wählen.</span>';
+    function findClass(groupKey, subKey) {
+      const group = METEOR_GROUPS[groupKey];
+      if (!group) return null;
+      return group.classes.find((c) => c.key === subKey) || null;
+    }
+
+    function calculate() {
+      const groupKey = groupSel.value;
+      const subKey   = subSel.value;
+      const mass     = parseFloat(massEl.value);
+
+      if (!groupKey) {
+        resEl.innerHTML = '<span class="calc-result-error">Bitte zuerst eine Hauptgruppe wählen.</span>';
+        return;
+      }
+      if (!subKey) {
+        resEl.innerHTML = '<span class="calc-result-error">Bitte eine Unterklasse wählen.</span>';
         return;
       }
       if (isNaN(mass) || mass <= 0) {
-        resEl.innerHTML =
-          '<span class="calc-result-error">Bitte eine gültige Masse (&gt; 0 g) eingeben.</span>';
+        resEl.innerHTML = '<span class="calc-result-error">Bitte eine gültige Masse (&gt; 0 g) eingeben.</span>';
         return;
       }
-      const ppg = PRICE_MODEL[cat];
-      if (ppg == null) {
-        resEl.innerHTML =
-          '<span class="calc-result-error">Für die Klasse <em>' + cat +
-          '</em> liegen leider keine Preisdaten im Katalog vor.</span>';
+      const cls = findClass(groupKey, subKey);
+      if (!cls) {
+        resEl.innerHTML = '<span class="calc-result-error">Klasse nicht gefunden.</span>';
         return;
       }
-      const price = mass * ppg;
+      const price = mass * cls.price;
       resEl.innerHTML =
-        '<div class="calc-price">$ ' + fmtUsd(price) + '</div>' +
+        '<div class="calc-price">' + fmtEur(price) + '</div>' +
         '<div class="calc-breakdown">' +
-          '<b>' + fmtG(mass) + ' g</b> &nbsp;×&nbsp; <b>$ ' +
-          ppg.toFixed(2) + ' / g</b>' +
+          '<b>' + fmtG(mass) + ' g</b> &nbsp;×&nbsp; <b>' + fmtEur(cls.price) + ' / g</b>' +
           '<span class="calc-meta">' +
-            'Median-Preis pro Gramm der Klasse <em>' + cat + '</em>, ' +
-            'abgeleitet aus dem sanitisierten Sammler-Katalog' +
+            'Geschätzt für <em>' + cls.label + '</em>' +
           '</span>' +
         '</div>';
     }
     btnEl.addEventListener('click', calculate);
-
-    // Enter inside the mass field also triggers the calculation.
     massEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); calculate(); }
+    });
+
+    // ---- Card clicks: drive both dropdowns + scroll + flash --------
+    document.querySelectorAll('.meteor-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const groupKey = card.dataset.group;
+        const subKey   = card.dataset.subclass;
+        if (!groupKey || !subKey) return;
+
+        groupSel.value = groupKey;
+        populateSubclasses(groupKey, subKey);
+
+        // Persistent selected state: remove the marker from any other
+        // card, then add it to the clicked one (lavender ring + ✓ badge
+        // via the .is-selected rule). This survives until another card
+        // is clicked.
+        document.querySelectorAll('.meteor-card.is-selected')
+                .forEach((c) => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+
+        // Briefly flash the clicked card and scroll the calculator into
+        // view so the user sees the cascade effect immediately.
+        card.classList.remove('is-flashing');
+        // Trigger reflow so the animation can replay on rapid clicks.
+        void card.offsetWidth;
+        card.classList.add('is-flashing');
+
+        document.getElementById('calc-group').scrollIntoView({
+          behavior: 'smooth', block: 'center',
+        });
+        // Focus the mass field if it's empty so the user can finish.
+        if (!massEl.value) {
+          setTimeout(() => massEl.focus(), 400);
+        } else {
+          // If they already typed a mass, immediately re-calculate.
+          calculate();
+        }
+      });
     });
   </script>
 
