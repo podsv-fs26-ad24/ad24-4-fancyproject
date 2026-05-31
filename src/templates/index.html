@@ -243,6 +243,11 @@
     @media (max-width: 820px) {
       .story { grid-template-columns: 1fr; gap: 1.6rem; }
     }
+    /* Section 3 uses a single flowing column – avoids the gap the
+       2-col grid would otherwise leave on the right side. */
+    .story.story--single-col {
+      grid-template-columns: 1fr;
+    }
     .story p { font-size: 1.05rem; }
     .story p + p { margin-top: 1.05rem; }
     .story p.lead-in {
@@ -819,10 +824,6 @@
           Whether a meteorite <em>falls</em> is a question of physics, and physics is the same everywhere on Earth. Whether a meteorite is <em>found</em> is a question of people, and people are spread very unevenly across the planet.
         </p>
 
-        <p>
-          The next two maps show why.
-        </p>
-
       </div>
     </div>
   </section>
@@ -876,10 +877,6 @@
 
         <div class="pull">In the end the map does not show where meteorites are common. It shows where we bother to look.</div>
 
-        <p>
-          But there are two more factors that have nothing to do with money or population. And those change everything.
-        </p>
-
       </div>
     </div>
   </section>
@@ -910,7 +907,7 @@
         <div class="map-canvas with-toolbar" id="map-c"></div>
       </div>
 
-      <div class="story reveal">
+      <div class="story story--single-col reveal">
 
         <p class="lead-in">
           From the logic of the previous two acts the conclusion follows almost inevitably. We now know that meteorites fall evenly everywhere. So if we want to calculate where the most valuable undiscovered meteorites lie we must combine two factors: maximum preservation meets minimal searching. That is where the greatest unrecovered treasure of science lies.
@@ -964,8 +961,11 @@
       </div>
 
       <p class="lead-in reveal" style="max-width: 60ch; margin-bottom: 2rem;">
-        Click on the description that best fits your stone. We will handle
-        the default settings for you. You only need to add the mass.
+        Choose a <strong>main group</strong>, then pick a <strong>subclass</strong>,
+        and enter the mass in grams. The calculator will estimate the collector
+        market value based on the median price per gram for that class.
+        If you are not sure about the classification, scroll down and click
+        one of the five cards below to fill in both dropdowns automatically.
       </p>
 
       <div class="calc reveal">
@@ -1011,9 +1011,9 @@
       <div class="meteor-gallery-intro reveal">
         <h3>Not sure about the class?</h3>
         <p>
-          Click on the image that looks most similar to your stone — the
-          two dropdowns will fill in automatically, you just need to enter
-          the mass.
+          Click on the description that best matches your stone. The
+          main group and subclass will be selected for you automatically.
+          You only need to enter the mass.
         </p>
       </div>
 
@@ -1125,8 +1125,8 @@
           <label for="explore-metric" class="explore-label">Data Layer:</label>
           <select id="explore-metric" class="explore-select">
             <option value="aridity">Aridity Index (Heatmap)</option>
-            <option value="pop">Population Density (2022)</option>
-            <option value="gdp">GDP per Capita (2024)</option>
+            <option value="pop">Population Density</option>
+            <option value="gdp">GDP per Capita</option>
             <option value="gap">Meteorite Discovery Gap</option>
           </select>
           <span class="explore-hint">Scroll to zoom · Drag to pan · Double click to reset</span>
@@ -1518,7 +1518,7 @@
       const traces = [];
 
       if (mapCMode === 'aridity') {
-        // Subtle aridity heatmap + its discrete-class legend on the LEFT.
+        // Subtle aridity heatmap + its discrete-class legend on the RIGHT.
         const aridityTrace = buildSubtleAridityBase();
         aridityTrace.marker.showscale = true;
         aridityTrace.marker.colorbar = {
@@ -1531,13 +1531,13 @@
           bgcolor:     '#131325',
           bordercolor: '#334155',
           len: 0.55,
-          x: 0.01, xanchor: 'left',
+          x: 0.99, xanchor: 'right',
         };
         traces.push(aridityTrace);
         traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.10)', width: 0.4 }));
       } else {
         // Meteorite finds – cyan dots on a dark canvas, with a tiny
-        // single-swatch legend on the LEFT so the layer is named.
+        // single-swatch legend on the RIGHT so the layer is named.
         traces.push(buildBorderOverlay({ color: 'rgba(255,255,255,0.15)', width: 0.5 }));
         const pts = buildPointsTrace({
           size: 2.4, opacity: 0.55,
@@ -1545,7 +1545,7 @@
           lineColor: 'rgba(0,0,0,0.45)', lineWidth: 0.15,
         });
         // Force colour mapping to a 1-stop "Meteorite Finds" colourbar
-        // on the left – uniform value, label only.
+        // on the right – uniform value, label only.
         pts.marker.color      = POINTS.map(() => 1);
         pts.marker.colorscale = [[0, '#7dd3fc'], [1, '#7dd3fc']];
         pts.marker.cmin       = 0;
@@ -1560,7 +1560,7 @@
           bgcolor:     '#131325',
           bordercolor: '#334155',
           len: 0.18,
-          x: 0.01, xanchor: 'left',
+          x: 0.99, xanchor: 'right',
         };
         traces.push(pts);
       }
