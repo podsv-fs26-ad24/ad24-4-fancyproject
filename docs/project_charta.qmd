@@ -40,7 +40,7 @@ Name: Lukas (University Student)
 Age: 23
 Quote: "I need hard data to know what my find is actually worth on the market."
 
-![ ](pics/lukas.jpeg){ width=70% }
+![ ](pics/lukas.png){ width=70% }
 
 Background & Behavior:
 Lucas is a dedicated student who finances his studies through an unusual but lucrative hobby: meteorite hunting. He has read deeply into the subject, knows the technical terminology, and has already found and sold genuine pieces online. He is highly digitally literate and frequently uses collector forums and auction platforms.
